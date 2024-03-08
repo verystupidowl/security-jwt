@@ -1,0 +1,87 @@
+package ru.tggc.SecurityJWT.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ru.tggc.SecurityJWT.model.Note;
+import ru.tggc.SecurityJWT.model.User;
+import ru.tggc.SecurityJWT.service.UserService;
+
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.openMocks;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.tggc.SecurityJWT.model.NoteType.LONG;
+import static ru.tggc.SecurityJWT.model.Role.USER;
+
+@ExtendWith(MockitoExtension.class)
+class DemoControllerTest {
+
+    @Mock
+    private UserService userService;
+
+    private DemoController demoController;
+
+    private AutoCloseable closeable;
+
+    private MockMvc mockMvc;
+
+    private ObjectMapper objectMapper;
+
+    @BeforeEach
+    void setUp() {
+        closeable = openMocks(this);
+        demoController = new DemoController(this.userService);
+        mockMvc = MockMvcBuilders.standaloneSetup(demoController).build();
+        objectMapper = new ObjectMapper();
+    }
+
+    @SneakyThrows
+    @AfterEach
+    void tearDown() {
+        closeable.close();
+    }
+
+    @Test
+    void sayHello() {
+    }
+
+    @SneakyThrows
+    @Test
+    void getAll() {
+        Note e1 = new Note(
+                1L,
+                "asd",
+                LONG,
+                "asd",
+                "asd",
+                "asd",
+                null
+        );
+        User user = new User(
+                4L,
+                "Lexa",
+                "Maklov",
+                "amaklov",
+                "123",
+                List.of(e1),
+                USER
+        );
+        List<User> users = List.of(user);
+        when(userService.findAll()).thenReturn(users);
+        mockMvc.perform(get("/api/v1/demo-controller/get"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(4L));
+        verify(userService, times(1)).findAll();
+    }
+}

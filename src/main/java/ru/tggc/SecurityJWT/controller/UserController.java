@@ -25,6 +25,6 @@ public class UserController {
     @GetMapping("/getUser")
     public UserDTO findUser(UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
-        return userMapper.fromUserEntityToUserDTO(user);
+        return userMapper.toDto(user);
     }
 }

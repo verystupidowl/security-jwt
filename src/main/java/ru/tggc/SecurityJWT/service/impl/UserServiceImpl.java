@@ -2,6 +2,7 @@ package ru.tggc.SecurityJWT.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.tggc.SecurityJWT.dto.UserDTO;
 import ru.tggc.SecurityJWT.model.User;
 import ru.tggc.SecurityJWT.repository.UserRepository;
 import ru.tggc.SecurityJWT.service.UserService;
@@ -26,7 +27,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
-        List<User> all = userRepository.findAll();
-        return all;
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void save(UserDTO dto) {
+//        userRepository.save(user);
     }
 }
