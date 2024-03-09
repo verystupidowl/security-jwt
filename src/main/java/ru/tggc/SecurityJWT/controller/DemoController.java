@@ -32,7 +32,7 @@ public class DemoController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Void> saveUser(UserDTO dto) {
+    public ResponseEntity<Void> saveUser(@RequestBody UserDTO dto) {
         userService.save(dto);
         return new ResponseEntity<>(CREATED);
     }

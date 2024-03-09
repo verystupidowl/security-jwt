@@ -1,6 +1,7 @@
 package ru.tggc.SecurityJWT.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.jfr.ContentType;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ru.tggc.SecurityJWT.dto.UserDTO;
 import ru.tggc.SecurityJWT.model.Note;
 import ru.tggc.SecurityJWT.model.User;
 import ru.tggc.SecurityJWT.service.UserService;
@@ -18,7 +21,9 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.tggc.SecurityJWT.model.NoteType.LONG;
@@ -83,5 +88,23 @@ class DemoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(4L));
         verify(userService, times(1)).findAll();
+    }
+
+    @SneakyThrows
+    @Test
+    void saveUser() {
+        UserDTO user = new UserDTO(
+                "Lexa",
+                "Maklov",
+                "amaklov2002@gmail.com"
+        );
+        System.out.println(objectMapper.writeValueAsString(user));
+        mockMvc.perform(
+                post("/api/v1/demo-controller/")
+                        .contentType(APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(user))
+                )
+                .andExpect(status().isCreated());
+        verify(userService, times(1)).save(user);
     }
 }

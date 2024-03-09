@@ -12,6 +12,7 @@ import ru.tggc.SecurityJWT.model.Note;
 import ru.tggc.SecurityJWT.model.User;
 import ru.tggc.SecurityJWT.repository.UserRepository;
 import ru.tggc.SecurityJWT.service.impl.UserServiceImpl;
+import ru.tggc.SecurityJWT.util.UserMapper;
 
 import java.util.List;
 
@@ -26,13 +27,16 @@ class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserMapper userMapper;
     private AutoCloseable autoCloseable;
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository, userMapper);
     }
 
     @AfterEach

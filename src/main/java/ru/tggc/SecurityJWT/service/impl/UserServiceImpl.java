@@ -6,6 +6,7 @@ import ru.tggc.SecurityJWT.dto.UserDTO;
 import ru.tggc.SecurityJWT.model.User;
 import ru.tggc.SecurityJWT.repository.UserRepository;
 import ru.tggc.SecurityJWT.service.UserService;
+import ru.tggc.SecurityJWT.util.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +15,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -32,6 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(UserDTO dto) {
-//        userRepository.save(user);
+        User user = userMapper.toEntity(dto);
+        userRepository.save(user);
     }
 }
