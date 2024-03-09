@@ -43,12 +43,6 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void editNote(Note note, User user) {
-        note.setOwner(user);
-        noteRepository.save(note);
-    }
-
-    @Override
     public Note findById(long id) {
         return noteRepository.findById(id).orElseThrow(NoteNotFoundException::new);
     }

@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Entity
 @Table(name = "note")
 @NoArgsConstructor
@@ -14,7 +17,11 @@ import lombok.*;
 @Setter
 @ToString
 @Builder
-public class Note {
+public class Note implements Serializable {
+
+
+    @Serial
+    private static final long serialVersionUID = 473884105320530316L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

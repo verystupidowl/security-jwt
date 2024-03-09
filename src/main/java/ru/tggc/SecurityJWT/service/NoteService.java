@@ -17,8 +17,6 @@ public interface NoteService {
 
     void deleteById(long id);
 
-    void editNote(Note note, User user);
-
     Note findById(long id);
 
     List<Note> findByColorAndUser(String color, User user);

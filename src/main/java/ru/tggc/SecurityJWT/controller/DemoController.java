@@ -1,6 +1,7 @@
 package ru.tggc.SecurityJWT.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +17,14 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("/api/v1/demo-controller")
 @CrossOrigin
 @RequiredArgsConstructor
+@Slf4j
 public class DemoController {
 
     private final UserService userService;
 
     @GetMapping
     public ResponseEntity<String> sayHello(UsernamePasswordAuthenticationToken principal) {
-        System.out.println(principal);
+        log.info(principal.toString());
         return ResponseEntity.ok("Hello from secured controller!");
     }
 

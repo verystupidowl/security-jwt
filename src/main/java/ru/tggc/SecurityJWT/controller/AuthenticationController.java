@@ -34,7 +34,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public AuthenticationResponse register(@Valid @RequestBody RegisterRequest request) {
         userService.findByEmail(request.getEmail())
-                .ifPresent((user) -> {
+                .ifPresent(user -> {
                     throw new UserAlreadyCreatedException("User have been already created");
                 });
         return authenticationService.register(request);
