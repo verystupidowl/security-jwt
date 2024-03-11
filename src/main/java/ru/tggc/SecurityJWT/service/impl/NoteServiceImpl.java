@@ -1,5 +1,6 @@
 package ru.tggc.SecurityJWT.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.tggc.SecurityJWT.exception.NoteNotFoundException;
@@ -27,6 +28,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
+    @Transactional
     public void save(Note note, User user) {
         note.setOwner(user);
         noteRepository.save(note);
