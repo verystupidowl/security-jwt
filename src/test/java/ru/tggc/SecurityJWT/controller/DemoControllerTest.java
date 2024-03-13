@@ -1,7 +1,6 @@
 package ru.tggc.SecurityJWT.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.jfr.ContentType;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.tggc.SecurityJWT.dto.UserDTO;
@@ -100,9 +98,9 @@ class DemoControllerTest {
         );
         System.out.println(objectMapper.writeValueAsString(user));
         mockMvc.perform(
-                post("/api/v1/demo-controller/")
-                        .contentType(APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(user))
+                        post("/api/v1/demo-controller/")
+                                .contentType(APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(user))
                 )
                 .andExpect(status().isCreated());
         verify(userService, times(1)).save(user);

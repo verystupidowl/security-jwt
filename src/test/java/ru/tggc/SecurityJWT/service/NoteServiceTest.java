@@ -3,7 +3,6 @@ package ru.tggc.SecurityJWT.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.mockito.Mock;
 import ru.tggc.SecurityJWT.exception.NoteNotFoundException;
 import ru.tggc.SecurityJWT.model.Note;
@@ -14,9 +13,8 @@ import ru.tggc.SecurityJWT.service.impl.NoteServiceImpl;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.given;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static ru.tggc.SecurityJWT.model.NoteType.LONG;
