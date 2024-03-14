@@ -11,7 +11,7 @@ public interface NoteService {
 
     List<Note> findAll();
 
-    void save(Note note, User user);
+    Note save(Note note, User user);
 
     List<Note> findByOwner(User user);
 

@@ -3,6 +3,7 @@ package ru.tggc.SecurityJWT.controller;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,9 +18,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+
 @RestController
 @RequestMapping("/api/v1/note")
 @CrossOrigin
+@Slf4j
 public class NoteController {
 
     private final NoteService noteService;
@@ -55,20 +60,20 @@ public class NoteController {
     public ResponseEntity<Boolean> addNote(@Valid @RequestBody Note note, UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
         noteService.save(note, user);
-        return ResponseEntity.ok(true);
+        return ResponseEntity.status(CREATED).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteNote(@PathVariable long id) {
         noteService.deleteById(id);
-        return ResponseEntity.ok(true);
+        return ResponseEntity.status(OK).build();
     }
 
     @PutMapping("/edit")
     public ResponseEntity<Boolean> editNote(@Valid @RequestBody Note note, UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
         noteService.save(note, user);
-        return ResponseEntity.ok(true);
+        return ResponseEntity.status(OK).build();
     }
 
     @ExceptionHandler(value = {NoteNotFoundException.class})

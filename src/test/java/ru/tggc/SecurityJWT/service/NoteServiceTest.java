@@ -3,7 +3,9 @@ package ru.tggc.SecurityJWT.service;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.tggc.SecurityJWT.exception.NoteNotFoundException;
 import ru.tggc.SecurityJWT.model.Note;
 import ru.tggc.SecurityJWT.model.User;
@@ -21,6 +23,7 @@ import static ru.tggc.SecurityJWT.model.NoteType.LONG;
 import static ru.tggc.SecurityJWT.model.NoteType.SHORT;
 import static ru.tggc.SecurityJWT.model.Role.USER;
 
+@ExtendWith(MockitoExtension.class)
 class NoteServiceTest {
 
     @Mock

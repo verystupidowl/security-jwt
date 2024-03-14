@@ -29,9 +29,9 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     @Transactional
-    public void save(Note note, User user) {
+    public Note save(Note note, User user) {
         note.setOwner(user);
-        noteRepository.save(note);
+        return noteRepository.save(note);
     }
 
     @Override
