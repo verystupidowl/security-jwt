@@ -17,6 +17,8 @@ import ru.tggc.SecurityJWT.service.UserService;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
+import static java.lang.StringTemplate.STR;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 @CrossOrigin
@@ -34,8 +36,8 @@ public class AuthenticationController {
     @PostMapping("/register")
     public AuthenticationResponse register(@Valid @RequestBody RegisterRequest request) {
         userService.findByEmail(request.getEmail())
-                .ifPresent(user -> {
-                    throw new UserAlreadyCreatedException("User have been already created");
+                .ifPresent(u -> {
+                    throw new UserAlreadyCreatedException(STR."User with email \{u.getEmail()} have been already created");
                 });
         return authenticationService.register(request);
     }

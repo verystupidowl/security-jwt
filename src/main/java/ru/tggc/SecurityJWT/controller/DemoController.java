@@ -3,7 +3,6 @@ package ru.tggc.SecurityJWT.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import ru.tggc.SecurityJWT.dto.UserDTO;
 import ru.tggc.SecurityJWT.model.User;
@@ -23,8 +22,7 @@ public class DemoController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<String> sayHello(UsernamePasswordAuthenticationToken principal) {
-        log.info(principal.toString());
+    public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok("Hello from secured controller!");
     }
 

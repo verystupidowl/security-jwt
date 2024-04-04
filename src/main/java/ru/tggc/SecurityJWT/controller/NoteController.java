@@ -53,7 +53,7 @@ public class NoteController {
     @GetMapping("/color/{color}")
     public List<Note> findByColor(@PathVariable String color, UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
-        return noteService.findByColorAndUser("#" + color, user);
+        return noteService.findByColorAndUser(STR."#\{color}", user);
     }
 
     @PostMapping
