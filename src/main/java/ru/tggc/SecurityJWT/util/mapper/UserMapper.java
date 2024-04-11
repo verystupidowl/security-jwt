@@ -1,4 +1,4 @@
-package ru.tggc.SecurityJWT.util;
+package ru.tggc.SecurityJWT.util.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;

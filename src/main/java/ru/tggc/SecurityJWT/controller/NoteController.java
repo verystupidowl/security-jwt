@@ -1,22 +1,16 @@
 package ru.tggc.SecurityJWT.controller;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import ru.tggc.SecurityJWT.dto.ErrorDTO;
-import ru.tggc.SecurityJWT.exception.NoteNotFoundException;
 import ru.tggc.SecurityJWT.model.Note;
 import ru.tggc.SecurityJWT.model.User;
 import ru.tggc.SecurityJWT.service.NoteService;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -76,19 +70,4 @@ public class NoteController {
         return ResponseEntity.status(OK).build();
     }
 
-    @ExceptionHandler(value = {NoteNotFoundException.class})
-    public ResponseEntity<ErrorDTO> handleNoteNotFoundException(NoteNotFoundException e) {
-        return ResponseEntity.badRequest().body(new ErrorDTO(e.getMessage(), LocalDateTime.now()));
-    }
-
-    @ExceptionHandler(value = {ConstraintViolationException.class})
-    public ResponseEntity<ErrorDTO> handleConstraintViolationException(ConstraintViolationException e) {
-        return ResponseEntity.badRequest().body(new ErrorDTO(
-                e.getConstraintViolations()
-                        .stream()
-                        .map(ConstraintViolation::getMessageTemplate)
-                        .collect(Collectors.joining(", ")),
-                LocalDateTime.now()
-        ));
-    }
 }

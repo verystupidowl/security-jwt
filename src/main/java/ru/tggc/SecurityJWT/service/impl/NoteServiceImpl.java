@@ -8,10 +8,12 @@ import ru.tggc.SecurityJWT.model.Note;
 import ru.tggc.SecurityJWT.model.User;
 import ru.tggc.SecurityJWT.repository.NoteRepository;
 import ru.tggc.SecurityJWT.service.NoteService;
+import ru.tggc.SecurityJWT.util.annotations.Profiling;
 
 import java.util.List;
 
 @Service
+@Profiling
 public class NoteServiceImpl implements NoteService {
 
     private final NoteRepository noteRepository;

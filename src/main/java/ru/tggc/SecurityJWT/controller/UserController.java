@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.tggc.SecurityJWT.dto.UserDTO;
 import ru.tggc.SecurityJWT.model.User;
-import ru.tggc.SecurityJWT.util.UserMapper;
+import ru.tggc.SecurityJWT.util.mapper.UserMapper;
 
 @RestController
 @RequestMapping("/api/v1/user")

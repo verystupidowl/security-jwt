@@ -6,7 +6,7 @@ import ru.tggc.SecurityJWT.dto.UserDTO;
 import ru.tggc.SecurityJWT.model.User;
 import ru.tggc.SecurityJWT.repository.UserRepository;
 import ru.tggc.SecurityJWT.service.UserService;
-import ru.tggc.SecurityJWT.util.UserMapper;
+import ru.tggc.SecurityJWT.util.mapper.UserMapper;
 
 import java.util.List;
 import java.util.Optional;

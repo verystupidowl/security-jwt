@@ -11,7 +11,7 @@ import ru.tggc.SecurityJWT.model.Note;
 import ru.tggc.SecurityJWT.model.User;
 import ru.tggc.SecurityJWT.repository.UserRepository;
 import ru.tggc.SecurityJWT.service.impl.UserServiceImpl;
-import ru.tggc.SecurityJWT.util.UserMapper;
+import ru.tggc.SecurityJWT.util.mapper.UserMapper;
 
 import java.util.List;
 
