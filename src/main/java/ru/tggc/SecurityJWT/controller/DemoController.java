@@ -26,12 +26,12 @@ public class DemoController {
         return ResponseEntity.ok("Hello from secured controller!");
     }
 
-    @GetMapping("/get")
+    @GetMapping
     public List<User> getAll() {
         return userService.findAll();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Void> saveUser(@RequestBody UserDTO dto) {
         userService.save(dto);
         return new ResponseEntity<>(CREATED);

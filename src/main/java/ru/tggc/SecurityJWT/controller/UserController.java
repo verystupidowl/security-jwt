@@ -22,7 +22,7 @@ public class UserController {
         this.userMapper = userMapper;
     }
 
-    @GetMapping("/getUser")
+    @GetMapping
     public UserDTO findUser(UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
         return userMapper.toDto(user);

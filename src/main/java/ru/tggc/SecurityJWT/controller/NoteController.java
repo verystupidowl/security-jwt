@@ -63,7 +63,7 @@ public class NoteController {
         return ResponseEntity.status(OK).build();
     }
 
-    @PutMapping("/edit")
+    @PutMapping
     public ResponseEntity<Boolean> editNote(@Valid @RequestBody Note note, UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
         noteService.save(note, user);
