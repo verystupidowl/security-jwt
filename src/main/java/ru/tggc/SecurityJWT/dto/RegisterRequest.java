@@ -1,4 +1,4 @@
-package ru.tggc.SecurityJWT.auth;
+package ru.tggc.SecurityJWT.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

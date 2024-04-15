@@ -5,16 +5,19 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.tggc.SecurityJWT.auth.AuthenticationRequest;
-import ru.tggc.SecurityJWT.auth.AuthenticationResponse;
-import ru.tggc.SecurityJWT.auth.RegisterRequest;
+import ru.tggc.SecurityJWT.dto.AuthenticationRequest;
+import ru.tggc.SecurityJWT.dto.AuthenticationResponse;
+import ru.tggc.SecurityJWT.dto.RegisterRequest;
 import ru.tggc.SecurityJWT.config.JwtService;
 import ru.tggc.SecurityJWT.model.Role;
 import ru.tggc.SecurityJWT.model.User;
 import ru.tggc.SecurityJWT.repository.UserRepository;
+import ru.tggc.SecurityJWT.service.AuthenticationService;
+import ru.tggc.SecurityJWT.util.annotations.Profiling;
 
 @Service
-public class AuthenticationServiceImpl implements ru.tggc.SecurityJWT.service.AuthenticationService {
+@Profiling
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

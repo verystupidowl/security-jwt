@@ -3,12 +3,14 @@ package ru.tggc.SecurityJWT.controller;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.tggc.SecurityJWT.auth.AuthenticationRequest;
-import ru.tggc.SecurityJWT.auth.AuthenticationResponse;
-import ru.tggc.SecurityJWT.auth.RegisterRequest;
+import ru.tggc.SecurityJWT.dto.AuthenticationRequest;
+import ru.tggc.SecurityJWT.dto.AuthenticationResponse;
+import ru.tggc.SecurityJWT.dto.RegisterRequest;
 import ru.tggc.SecurityJWT.exception.UserAlreadyCreatedException;
 import ru.tggc.SecurityJWT.service.AuthenticationService;
 import ru.tggc.SecurityJWT.service.UserService;
+
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -25,6 +27,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
+    @ResponseStatus(CREATED)
     public AuthenticationResponse register(@Valid @RequestBody RegisterRequest request) {
         userService.findByEmail(request.getEmail())
                 .ifPresent(u -> {
