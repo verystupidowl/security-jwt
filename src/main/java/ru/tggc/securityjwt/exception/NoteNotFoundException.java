@@ -3,6 +3,10 @@ package ru.tggc.securityjwt.exception;
 public class NoteNotFoundException extends RuntimeException {
 
     public NoteNotFoundException() {
-        super("Note not found!");
+        super();
+    }
+
+    public NoteNotFoundException(String msg) {
+        super(msg);
     }
 }

@@ -13,7 +13,6 @@ import ru.tggc.securityjwt.util.annotations.Profiling;
 import ru.tggc.securityjwt.util.mapper.NoteMapper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Profiling
@@ -61,7 +60,7 @@ public class NoteServiceImpl implements NoteService {
     public NoteDTO findById(long id) {
         return noteRepository.findById(id)
                 .map(mapper::toDto)
-                .orElseThrow(NoteNotFoundException::new);
+                .orElseThrow(() -> new NoteNotFoundException(STR."Not found note with id \{id}"));
     }
 
     @Override
