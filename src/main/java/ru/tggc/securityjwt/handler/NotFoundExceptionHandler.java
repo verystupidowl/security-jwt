@@ -1,4 +1,4 @@
-package ru.tggc.securityjwt.controller.advices;
+package ru.tggc.securityjwt.handler;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

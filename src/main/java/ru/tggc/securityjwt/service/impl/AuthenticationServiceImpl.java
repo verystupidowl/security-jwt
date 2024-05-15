@@ -36,10 +36,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
         User user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .firstname(request.firstname())
+                .lastname(request.lastname())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
                 .role(Role.USER)
                 .build();
         userRepository.save(user);
@@ -51,11 +51,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
+                        request.email(),
+                        request.password()
                 )
         );
-        User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        User user = userRepository.findByEmail(request.email()).orElseThrow();
         String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }

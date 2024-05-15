@@ -1,4 +1,4 @@
-package ru.tggc.securityjwt.controller.advices;
+package ru.tggc.securityjwt.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

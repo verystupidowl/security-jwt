@@ -1,26 +1,17 @@
 package ru.tggc.securityjwt.dto;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import ru.tggc.securityjwt.model.NoteType;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class NoteDTO {
-
-    private long id;
-
-    private String name;
-
-    private NoteType type;
-
-    private String text;
-
-    private String caption;
-
-    private String color;
+public record NoteDTO(
+        long id,
+        @NotEmpty(message = "Note name should not be empty!")
+        String name,
+        NoteType type,
+        String text,
+        String caption,
+        String color
+) {
 }

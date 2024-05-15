@@ -2,8 +2,21 @@ package ru.tggc.securityjwt.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +25,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "usr")
+@Table(name = "user")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -45,15 +58,6 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-
-
-    public User(String firstname, String lastname, String email, String password) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-    }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

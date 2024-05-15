@@ -1,17 +1,12 @@
 package ru.tggc.securityjwt.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class UserDTO {
+public record UserDTO(
 
-    private String firstname;
-    private String lastname;
-    private String email;
+        String firstname,
+        String lastname,
+        String email
+) {
 }
