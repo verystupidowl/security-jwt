@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 
-public record ErrorDTO(
+public record ErrorDto(
         HttpStatus status,
         String msg,
         @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd HH:mm:ss")

@@ -30,27 +30,19 @@ import java.io.Serializable;
 @ToString
 @Builder
 public class Note implements Serializable {
-
-
     @Serial
     private static final long serialVersionUID = 473884105320530316L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
-
     @Column(name = "name")
     private String name;
-
     @Enumerated(EnumType.STRING)
     private NoteType type;
-
     private String text;
-
     private String caption;
-
     private String color;
-
     @ManyToOne
     @JsonIdentityInfo(
             generator = ObjectIdGenerators.PropertyGenerator.class,

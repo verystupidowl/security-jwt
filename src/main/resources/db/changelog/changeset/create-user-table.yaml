@@ -6,14 +6,15 @@ databaseChangeLog:
         - onFail: MARK_RAN
           not:
             tableExists:
-              tableName: user
+              tableName: usr
       changes:
         - createTable:
-            tableName: user
+            tableName: usr
             columns:
               - column:
                   name: id
                   type: bigint
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false

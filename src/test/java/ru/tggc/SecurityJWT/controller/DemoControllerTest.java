@@ -10,22 +10,23 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.tggc.SecurityJWT.dto.UserDTO;
-import ru.tggc.SecurityJWT.model.Note;
-import ru.tggc.SecurityJWT.model.User;
-import ru.tggc.SecurityJWT.service.UserService;
+import ru.tggc.securityjwt.controller.DemoController;
+import ru.tggc.securityjwt.model.Note;
+import ru.tggc.securityjwt.model.User;
+import ru.tggc.securityjwt.service.UserService;
 
 import java.util.List;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.tggc.SecurityJWT.model.NoteType.LONG;
-import static ru.tggc.SecurityJWT.model.Role.USER;
+
 
 @ExtendWith(MockitoExtension.class)
 class DemoControllerTest {

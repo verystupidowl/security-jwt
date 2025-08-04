@@ -4,6 +4,7 @@ import lombok.Builder;
 
 
 @Builder
-public record AuthenticationRequest(
+public record AuthenticationRq(
         String email,
-        String password) {}
+        String password) {
+}

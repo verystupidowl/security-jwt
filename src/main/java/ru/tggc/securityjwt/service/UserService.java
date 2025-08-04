@@ -1,18 +1,19 @@
 package ru.tggc.securityjwt.service;
 
 import org.springframework.stereotype.Service;
-import ru.tggc.securityjwt.dto.UserDTO;
+import ru.tggc.securityjwt.dto.AuthenticationRs;
+import ru.tggc.securityjwt.dto.RegisterRq;
+import ru.tggc.securityjwt.dto.UserDto;
 import ru.tggc.securityjwt.model.User;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface UserService {
 
-    Optional<User> findByEmail(String email);
+    AuthenticationRs register(RegisterRq request);
 
     List<User> findAll();
 
-    void save(UserDTO dto);
+    void save(UserDto dto);
 }

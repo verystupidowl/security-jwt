@@ -1,8 +1,8 @@
 package ru.tggc.securityjwt.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tggc.securityjwt.dto.NoteDTO;
+import ru.tggc.securityjwt.dto.NoteDto;
 import ru.tggc.securityjwt.model.User;
 import ru.tggc.securityjwt.service.NoteService;
 
@@ -27,39 +27,34 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/api/v1/note")
 @CrossOrigin
 @Slf4j
+@RequiredArgsConstructor
 public class NoteController {
-
     private final NoteService noteService;
 
-    @Autowired
-    public NoteController(NoteService noteService) {
-        this.noteService = noteService;
-    }
-
     @GetMapping("/")
-    public List<NoteDTO> findAllNotes() {
+    public List<NoteDto> findAllNotes() {
         return noteService.findAll();
     }
 
     @GetMapping("/myNotes")
-    public List<NoteDTO> findNotesByUser(UsernamePasswordAuthenticationToken token) {
+    public List<NoteDto> findNotesByUser(UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
         return noteService.findByOwner(user);
     }
 
     @GetMapping("/{id}")
-    public NoteDTO findById(@PathVariable long id) {
+    public NoteDto findById(@PathVariable long id) {
         return noteService.findById(id);
     }
 
     @GetMapping("/color/{color}")
-    public List<NoteDTO> findByColor(@PathVariable String color, UsernamePasswordAuthenticationToken token) {
+    public List<NoteDto> findByColor(@PathVariable String color, UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
-        return noteService.findByColorAndUser(STR."#\{color}", user);
+        return noteService.findByColorAndUser("#%s".formatted(color), user);
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> addNote(@Valid @RequestBody NoteDTO note, UsernamePasswordAuthenticationToken token) {
+    public ResponseEntity<Boolean> addNote(@Valid @RequestBody NoteDto note, UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
         noteService.save(note, user);
         return ResponseEntity.status(CREATED).build();
@@ -72,7 +67,7 @@ public class NoteController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> editNote(@Valid @RequestBody NoteDTO note, UsernamePasswordAuthenticationToken token) {
+    public ResponseEntity<Boolean> editNote(@Valid @RequestBody NoteDto note, UsernamePasswordAuthenticationToken token) {
         User user = (User) token.getPrincipal();
         noteService.save(note, user);
         return ResponseEntity.status(OK).build();

@@ -5,7 +5,7 @@ import lombok.Builder;
 import ru.tggc.securityjwt.model.NoteType;
 
 @Builder
-public record NoteDTO(
+public record NoteDto(
         long id,
         @NotEmpty(message = "Note name should not be empty!")
         String name,

@@ -7,25 +7,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.tggc.SecurityJWT.model.Note;
-import ru.tggc.SecurityJWT.model.User;
-import ru.tggc.SecurityJWT.repository.UserRepository;
-import ru.tggc.SecurityJWT.service.impl.UserServiceImpl;
-import ru.tggc.SecurityJWT.util.mapper.UserMapper;
+import ru.tggc.securityjwt.repository.UserRepository;
+import ru.tggc.securityjwt.service.AuthenticationService;
+import ru.tggc.securityjwt.service.UserService;
+import ru.tggc.securityjwt.service.impl.UserServiceImpl;
+import ru.tggc.securityjwt.mapper.UserMapper;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.when;
-import static ru.tggc.SecurityJWT.model.NoteType.LONG;
-import static ru.tggc.SecurityJWT.model.NoteType.SHORT;
-import static ru.tggc.SecurityJWT.model.Role.USER;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private AuthenticationService authenticationService;
 
     @Mock
     private UserMapper userMapper;
@@ -35,7 +35,7 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        userService = new UserServiceImpl(userRepository, userMapper);
+        userService = new UserServiceImpl(userRepository, userMapper, authenticationService);
     }
 
     @AfterEach

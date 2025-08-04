@@ -1,4 +1,4 @@
-package ru.tggc.securityjwt.util.mapper;
+package ru.tggc.securityjwt.mapper;
 
 public interface Mappable<E, D> {
 

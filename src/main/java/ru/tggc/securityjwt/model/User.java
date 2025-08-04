@@ -1,7 +1,6 @@
 package ru.tggc.securityjwt.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "usr")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -33,29 +32,17 @@ import java.util.List;
 @ToString
 @Builder
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-
-
     private String firstname;
-
-
     private String lastname;
-
-
     private String email;
-
     private String password;
-
     @ToString.Exclude
-    @JsonIdentityInfo(
-            generator = ObjectIdGenerators.PropertyGenerator.class,
-            property = "id")
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "owner")
     private List<Note> note;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 

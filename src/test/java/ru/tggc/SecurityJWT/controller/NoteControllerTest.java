@@ -10,9 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.tggc.SecurityJWT.model.Note;
-import ru.tggc.SecurityJWT.model.User;
-import ru.tggc.SecurityJWT.service.NoteService;
+import ru.tggc.securityjwt.model.User;
+import ru.tggc.securityjwt.service.NoteService;
 
 import java.util.Collections;
 
@@ -20,8 +19,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.tggc.SecurityJWT.model.NoteType.LONG;
-import static ru.tggc.SecurityJWT.model.Role.USER;
 
 @AutoConfigureMockMvc
 @SpringBootTest

@@ -3,6 +3,6 @@ package ru.tggc.securityjwt.dto;
 import lombok.Builder;
 
 @Builder
-public record AuthenticationResponse(
+public record AuthenticationRs(
         String token
 ) {}

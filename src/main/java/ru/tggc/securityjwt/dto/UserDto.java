@@ -3,8 +3,7 @@ package ru.tggc.securityjwt.dto;
 import lombok.Builder;
 
 @Builder
-public record UserDTO(
-
+public record UserDto(
         String firstname,
         String lastname,
         String email

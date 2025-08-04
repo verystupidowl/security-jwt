@@ -1,31 +1,36 @@
 package ru.tggc.securityjwt.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.tggc.securityjwt.dto.UserDTO;
+import ru.tggc.securityjwt.dto.AuthenticationRs;
+import ru.tggc.securityjwt.dto.RegisterRq;
+import ru.tggc.securityjwt.dto.UserDto;
+import ru.tggc.securityjwt.exception.UserAlreadyCreatedException;
+import ru.tggc.securityjwt.mapper.UserMapper;
 import ru.tggc.securityjwt.model.User;
 import ru.tggc.securityjwt.repository.UserRepository;
+import ru.tggc.securityjwt.service.AuthenticationService;
 import ru.tggc.securityjwt.service.UserService;
-import ru.tggc.securityjwt.util.mapper.UserMapper;
 
 import java.util.List;
-import java.util.Optional;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-    }
+    private final AuthenticationService authenticationService;
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public AuthenticationRs register(RegisterRq request) {
+        userRepository.findByEmail(request.email())
+                .ifPresent(u -> {
+                    log.error("User with email {} already exists", request.email());
+                    throw new UserAlreadyCreatedException(u.getEmail());
+                });
+        return authenticationService.register(request);
     }
 
     @Override
@@ -34,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserDTO dto) {
+    public void save(UserDto dto) {
         User user = userMapper.toEntity(dto);
         userRepository.save(user);
     }

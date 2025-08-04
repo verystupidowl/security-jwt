@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
 @Builder
-public record RegisterRequest(
+public record RegisterRq(
         @NotEmpty(message = "Firstname should not be empty!")
         @Size(min = 1, max = 20, message = "Firstname size should be between 1 and 20 characters!")
         String firstname,
@@ -21,6 +21,8 @@ public record RegisterRequest(
         String email,
 
         @NotEmpty
-        String password
+        String password,
+        @NotEmpty
+        String passwordConfirmation
 ) {
 }

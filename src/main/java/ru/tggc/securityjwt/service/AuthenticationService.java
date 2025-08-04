@@ -1,13 +1,20 @@
 package ru.tggc.securityjwt.service;
 
-import ru.tggc.securityjwt.dto.AuthenticationRequest;
-import ru.tggc.securityjwt.dto.AuthenticationResponse;
-import ru.tggc.securityjwt.dto.RegisterRequest;
+import ru.tggc.securityjwt.dto.AuthenticationRq;
+import ru.tggc.securityjwt.dto.AuthenticationRs;
+import ru.tggc.securityjwt.dto.ChangePasswordDto;
+import ru.tggc.securityjwt.dto.RegisterRq;
+import ru.tggc.securityjwt.dto.VerifyDto;
 
 public interface AuthenticationService {
 
+    AuthenticationRs register(RegisterRq request);
 
-    AuthenticationResponse register(RegisterRequest request);
+    AuthenticationRs authenticate(AuthenticationRq request);
 
-    AuthenticationResponse authenticate(AuthenticationRequest request);
+    void sendCode(String email);
+
+    Boolean verifyCode(VerifyDto dto);
+
+    void changePassword(ChangePasswordDto dto);
 }

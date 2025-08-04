@@ -1,5 +1,5 @@
 package ru.tggc.securityjwt.dto;
 
-public record ColorDTO(
+public record ColorDto(
         String color
 ) {}
