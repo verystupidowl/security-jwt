@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.tggc.securityjwt.dto.AuthenticationRq;
 import ru.tggc.securityjwt.dto.AuthenticationRs;
 import ru.tggc.securityjwt.dto.ChangePasswordDto;
-import ru.tggc.securityjwt.dto.EmailDto;
+import ru.tggc.securityjwt.dto.SendCodeDto;
 import ru.tggc.securityjwt.dto.RegisterRq;
 import ru.tggc.securityjwt.dto.VerifyDto;
 import ru.tggc.securityjwt.service.AuthenticationService;
@@ -40,8 +40,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/send-code")
-    public ResponseEntity<Void> sendCode(@Valid @RequestBody EmailDto dto) {
-        authenticationService.sendCode(dto.email());
+    public ResponseEntity<Void> sendCode(@Valid @RequestBody SendCodeDto dto) {
+        authenticationService.sendCode(dto);
         return ResponseEntity.ok().build();
     }
 

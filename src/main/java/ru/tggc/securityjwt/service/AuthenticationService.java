@@ -4,6 +4,7 @@ import ru.tggc.securityjwt.dto.AuthenticationRq;
 import ru.tggc.securityjwt.dto.AuthenticationRs;
 import ru.tggc.securityjwt.dto.ChangePasswordDto;
 import ru.tggc.securityjwt.dto.RegisterRq;
+import ru.tggc.securityjwt.dto.SendCodeDto;
 import ru.tggc.securityjwt.dto.VerifyDto;
 
 public interface AuthenticationService {
@@ -12,7 +13,7 @@ public interface AuthenticationService {
 
     AuthenticationRs authenticate(AuthenticationRq request);
 
-    void sendCode(String email);
+    void sendCode(SendCodeDto email);
 
     Boolean verifyCode(VerifyDto dto);
 

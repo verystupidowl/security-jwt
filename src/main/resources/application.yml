@@ -1,4 +1,10 @@
 spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: security-jwt
+  kafka-topic:
+    simple-notification: simple-notification-topic
   cache:
     type: redis
   mail:
@@ -39,4 +45,3 @@ spring:
       port: 6379
 properties:
   secret: A1Bpk31LCairKHoJsB1Agv/MBXfd+1ifXFDXLyv4BYvPdQHs9ebAUu52bt7YIta
-

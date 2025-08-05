@@ -45,6 +45,7 @@ public class User implements UserDetails {
     private List<Note> note;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private Boolean twoFactorEnabled;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

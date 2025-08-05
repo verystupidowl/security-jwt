@@ -1,4 +1,6 @@
 package ru.tggc.securityjwt.dto;
 
-public record VerifyDto(String code, String email) {
+import ru.tggc.securityjwt.dto.notification.NotificationType;
+
+public record VerifyDto(String code, String email, NotificationType type) {
 }

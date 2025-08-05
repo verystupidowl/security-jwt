@@ -2,6 +2,7 @@ package ru.tggc.securityjwt.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
@@ -23,6 +24,8 @@ public record RegisterRq(
         @NotEmpty
         String password,
         @NotEmpty
-        String passwordConfirmation
+        String passwordConfirmation,
+        @NotNull
+        Boolean twoFactorEnabled
 ) {
 }

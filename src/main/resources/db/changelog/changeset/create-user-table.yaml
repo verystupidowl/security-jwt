@@ -44,3 +44,8 @@ databaseChangeLog:
                   type: varchar(10)
                   constraints:
                     nullable: false
+              - column:
+                  name: two_factor_enabled
+                  type: boolean
+                  constraints:
+                    nullable: false

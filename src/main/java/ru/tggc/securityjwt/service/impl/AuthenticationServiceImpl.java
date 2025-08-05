@@ -6,31 +6,34 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.tggc.securityjwt.config.JwtService;
+import org.springframework.transaction.annotation.Transactional;
+import ru.tggc.securityjwt.api.CodeApi;
 import ru.tggc.securityjwt.dto.AuthenticationRq;
 import ru.tggc.securityjwt.dto.AuthenticationRs;
 import ru.tggc.securityjwt.dto.ChangePasswordDto;
 import ru.tggc.securityjwt.dto.RegisterRq;
+import ru.tggc.securityjwt.dto.SendCodeDto;
 import ru.tggc.securityjwt.dto.VerifyDto;
+import ru.tggc.securityjwt.dto.notification.NotificationType;
 import ru.tggc.securityjwt.exception.PasswordsNotMatchException;
 import ru.tggc.securityjwt.exception.UserNotFoundException;
 import ru.tggc.securityjwt.model.Role;
 import ru.tggc.securityjwt.model.User;
 import ru.tggc.securityjwt.repository.UserRepository;
+import ru.tggc.securityjwt.sender.Sender;
+import ru.tggc.securityjwt.sender.SenderFactory;
 import ru.tggc.securityjwt.service.AuthenticationService;
-import ru.tggc.securityjwt.service.ResetPasswordService;
-import ru.tggc.securityjwt.util.CodeGenerator;
-import ru.tggc.securityjwt.util.annotations.Profiling;
+import ru.tggc.securityjwt.service.JwtService;
 
 @Service
-@Profiling
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final ResetPasswordService resetPasswordService;
+    private final SenderFactory senderFactory;
+    private final CodeApi codeApi;
 
     @Override
     public AuthenticationRs register(RegisterRq request) {
@@ -43,6 +46,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.USER)
+                .twoFactorEnabled(request.twoFactorEnabled())
                 .build();
         userRepository.save(user);
         String jwtToken = jwtService.generateToken(user);
@@ -64,21 +68,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void sendCode(String email) {
-        String code = CodeGenerator.generate();
-        String text = STR."Ваш код для восстановления пароля: \{code}";
-        resetPasswordService.sendCode(email, text);
+    public void sendCode(SendCodeDto dto) {
+        Sender sender = senderFactory.getSender(dto.type());
+        sender.send(dto.email(), dto.type());
     }
 
     @Override
     public Boolean verifyCode(VerifyDto dto) {
         String code = dto.code();
         String email = dto.email();
-        String codeFromDb = resetPasswordService.getCode(email);
+        String codeFromDb = codeApi.getCode(email, NotificationType.CHANGE_PASSWORD);
         return code.equals(codeFromDb);
     }
 
     @Override
+    @Transactional
     public void changePassword(ChangePasswordDto dto) {
         if (!dto.password().equals(dto.passwordConfirmation())) {
             throw new PasswordsNotMatchException("Passwords do not match");
@@ -86,7 +90,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByEmail(dto.email())
                 .orElseThrow(() -> new UserNotFoundException(dto.email()));
         user.setPassword(passwordEncoder.encode(dto.password()));
-        resetPasswordService.deleteCode(dto.email());
+        codeApi.deleteCode(dto.email(), NotificationType.CHANGE_PASSWORD);
         userRepository.save(user);
     }
 }
