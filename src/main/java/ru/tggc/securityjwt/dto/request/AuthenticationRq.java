@@ -1,4 +1,4 @@
-package ru.tggc.securityjwt.dto;
+package ru.tggc.securityjwt.dto.request;
 
 import lombok.Builder;
 

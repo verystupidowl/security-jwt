@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tggc.securityjwt.dto.AuthenticationRq;
-import ru.tggc.securityjwt.dto.AuthenticationRs;
-import ru.tggc.securityjwt.dto.ChangePasswordDto;
-import ru.tggc.securityjwt.dto.SendCodeDto;
-import ru.tggc.securityjwt.dto.RegisterRq;
-import ru.tggc.securityjwt.dto.VerifyDto;
+import ru.tggc.securityjwt.dto.request.AuthenticationRq;
+import ru.tggc.securityjwt.dto.request.ChangePasswordRq;
+import ru.tggc.securityjwt.dto.request.RegisterRq;
+import ru.tggc.securityjwt.dto.request.SendCodeRq;
+import ru.tggc.securityjwt.dto.request.VerifyRq;
+import ru.tggc.securityjwt.dto.response.AuthenticationRs;
 import ru.tggc.securityjwt.service.AuthenticationService;
 import ru.tggc.securityjwt.service.UserService;
 
@@ -40,18 +40,18 @@ public class AuthenticationController {
     }
 
     @PostMapping("/send-code")
-    public ResponseEntity<Void> sendCode(@Valid @RequestBody SendCodeDto dto) {
+    public ResponseEntity<Void> sendCode(@Valid @RequestBody SendCodeRq dto) {
         authenticationService.sendCode(dto);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/verify-code")
-    public Boolean verifyCode(@RequestBody VerifyDto dto) {
+    public Boolean verifyCode(@RequestBody VerifyRq dto) {
         return authenticationService.verifyCode(dto);
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordDto dto) {
+    public ResponseEntity<Void> changePassword(@Valid @RequestBody ChangePasswordRq dto) {
         authenticationService.changePassword(dto);
         return ResponseEntity.ok().build();
     }

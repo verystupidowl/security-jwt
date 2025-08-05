@@ -1,4 +1,4 @@
-package ru.tggc.securityjwt.dto;
+package ru.tggc.securityjwt.dto.domain;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;

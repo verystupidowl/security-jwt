@@ -1,9 +1,9 @@
 package ru.tggc.securityjwt.service;
 
 import org.springframework.stereotype.Service;
-import ru.tggc.securityjwt.dto.AuthenticationRs;
-import ru.tggc.securityjwt.dto.RegisterRq;
-import ru.tggc.securityjwt.dto.UserDto;
+import ru.tggc.securityjwt.dto.response.AuthenticationRs;
+import ru.tggc.securityjwt.dto.request.RegisterRq;
+import ru.tggc.securityjwt.dto.domain.UserDto;
 import ru.tggc.securityjwt.model.User;
 
 import java.util.List;

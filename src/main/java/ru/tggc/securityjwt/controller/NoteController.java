@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tggc.securityjwt.dto.NoteDto;
+import ru.tggc.securityjwt.dto.domain.NoteDto;
 import ru.tggc.securityjwt.model.User;
 import ru.tggc.securityjwt.service.NoteService;
 

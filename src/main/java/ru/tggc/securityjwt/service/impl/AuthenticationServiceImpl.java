@@ -8,13 +8,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tggc.securityjwt.api.CodeApi;
-import ru.tggc.securityjwt.dto.AuthenticationRq;
-import ru.tggc.securityjwt.dto.AuthenticationRs;
-import ru.tggc.securityjwt.dto.ChangePasswordDto;
-import ru.tggc.securityjwt.dto.RegisterRq;
-import ru.tggc.securityjwt.dto.SendCodeDto;
-import ru.tggc.securityjwt.dto.VerifyDto;
 import ru.tggc.securityjwt.dto.notification.NotificationType;
+import ru.tggc.securityjwt.dto.request.AuthenticationRq;
+import ru.tggc.securityjwt.dto.request.ChangePasswordRq;
+import ru.tggc.securityjwt.dto.request.RegisterRq;
+import ru.tggc.securityjwt.dto.request.SendCodeRq;
+import ru.tggc.securityjwt.dto.request.VerifyRq;
+import ru.tggc.securityjwt.dto.response.AuthenticationRs;
 import ru.tggc.securityjwt.exception.PasswordsNotMatchException;
 import ru.tggc.securityjwt.exception.UserNotFoundException;
 import ru.tggc.securityjwt.model.Role;
@@ -68,13 +68,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void sendCode(SendCodeDto dto) {
+    public void sendCode(SendCodeRq dto) {
         Sender sender = senderFactory.getSender(dto.type());
         sender.send(dto.email(), dto.type());
     }
 
     @Override
-    public Boolean verifyCode(VerifyDto dto) {
+    public Boolean verifyCode(VerifyRq dto) {
         String code = dto.code();
         String email = dto.email();
         String codeFromDb = codeApi.getCode(email, NotificationType.CHANGE_PASSWORD);
@@ -83,7 +83,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     @Transactional
-    public void changePassword(ChangePasswordDto dto) {
+    public void changePassword(ChangePasswordRq dto) {
         if (!dto.password().equals(dto.passwordConfirmation())) {
             throw new PasswordsNotMatchException("Passwords do not match");
         }

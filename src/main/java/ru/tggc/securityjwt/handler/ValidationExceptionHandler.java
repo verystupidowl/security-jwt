@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.tggc.securityjwt.dto.ErrorDto;
+import ru.tggc.securityjwt.dto.response.ErrorRs;
 import ru.tggc.securityjwt.mapper.ErrorMapper;
 
 @RestControllerAdvice
@@ -14,7 +14,7 @@ public class ValidationExceptionHandler {
     private final ErrorMapper errorMapper;
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-    public ResponseEntity<ErrorDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorRs> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         return ResponseEntity.badRequest().body(errorMapper.toDto(e));
     }
 }

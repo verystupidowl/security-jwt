@@ -1,7 +1,7 @@
 package ru.tggc.securityjwt.service;
 
 import org.springframework.stereotype.Service;
-import ru.tggc.securityjwt.dto.NoteDto;
+import ru.tggc.securityjwt.dto.domain.NoteDto;
 import ru.tggc.securityjwt.model.User;
 
 import java.util.List;

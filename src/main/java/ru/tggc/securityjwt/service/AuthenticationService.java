@@ -1,11 +1,11 @@
 package ru.tggc.securityjwt.service;
 
-import ru.tggc.securityjwt.dto.AuthenticationRq;
-import ru.tggc.securityjwt.dto.AuthenticationRs;
-import ru.tggc.securityjwt.dto.ChangePasswordDto;
-import ru.tggc.securityjwt.dto.RegisterRq;
-import ru.tggc.securityjwt.dto.SendCodeDto;
-import ru.tggc.securityjwt.dto.VerifyDto;
+import ru.tggc.securityjwt.dto.request.AuthenticationRq;
+import ru.tggc.securityjwt.dto.response.AuthenticationRs;
+import ru.tggc.securityjwt.dto.request.ChangePasswordRq;
+import ru.tggc.securityjwt.dto.request.RegisterRq;
+import ru.tggc.securityjwt.dto.request.SendCodeRq;
+import ru.tggc.securityjwt.dto.request.VerifyRq;
 
 public interface AuthenticationService {
 
@@ -13,9 +13,9 @@ public interface AuthenticationService {
 
     AuthenticationRs authenticate(AuthenticationRq request);
 
-    void sendCode(SendCodeDto email);
+    void sendCode(SendCodeRq email);
 
-    Boolean verifyCode(VerifyDto dto);
+    Boolean verifyCode(VerifyRq dto);
 
-    void changePassword(ChangePasswordDto dto);
+    void changePassword(ChangePasswordRq dto);
 }

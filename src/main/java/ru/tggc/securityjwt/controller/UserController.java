@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tggc.securityjwt.dto.UserDto;
+import ru.tggc.securityjwt.dto.domain.UserDto;
 import ru.tggc.securityjwt.model.User;
 import ru.tggc.securityjwt.mapper.UserMapper;
 

@@ -3,7 +3,7 @@ package ru.tggc.securityjwt.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.tggc.securityjwt.dto.NoteDto;
+import ru.tggc.securityjwt.dto.domain.NoteDto;
 import ru.tggc.securityjwt.exception.NoteNotFoundException;
 import ru.tggc.securityjwt.mapper.NoteMapper;
 import ru.tggc.securityjwt.model.Note;
