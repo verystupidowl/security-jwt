@@ -5,23 +5,6 @@ spring:
       group-id: security-jwt
   kafka-topic:
     simple-notification: simple-notification-topic
-  cache:
-    type: redis
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: amaklov2002@gmail.com
-    password: snjw kuyd szce boqf
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-          connectiontimeout: 5000
-          timeout: 5000
-          writetimeout: 5000
-    default-encoding: UTF-8
   liquibase:
     enabled: true
   datasource:
@@ -39,9 +22,5 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
-  data:
-    redis:
-      host: localhost
-      port: 6379
 properties:
   secret: A1Bpk31LCairKHoJsB1Agv/MBXfd+1ifXFDXLyv4BYvPdQHs9ebAUu52bt7YIta
