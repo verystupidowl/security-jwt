@@ -2,7 +2,6 @@ package org.tggc.authenticationservice.service;
 
 import org.springframework.stereotype.Service;
 import org.tggc.authenticationservice.dto.domain.NoteDto;
-import org.tggc.authenticationservice.model.User;
 
 import java.util.List;
 
@@ -11,13 +10,13 @@ public interface NoteService {
 
     List<NoteDto> findAll();
 
-    NoteDto save(NoteDto note, User user);
+    NoteDto save(NoteDto note, String email);
 
-    List<NoteDto> findByOwner(User user);
+    List<NoteDto> findByOwner(String id);
 
     void deleteById(long id);
 
     NoteDto findById(long id);
 
-    List<NoteDto> findByColorAndUser(String color, User user);
+    List<NoteDto> findByColorAndUser(String color, String email);
 }
