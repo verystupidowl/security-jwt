@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.tggc.authenticationservice.dto.response.ErrorRs;
+import org.tggc.authapi.dto.ErrorRs;
 
 import java.util.List;
 import java.util.stream.Collectors;

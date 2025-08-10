@@ -19,7 +19,7 @@ public class TwoFactorSender extends AbstractSender {
     @Override
     protected NotificationDto.NotificationDtoBuilder getNotificationDtoBuilder() {
         String code = CodeGenerator.generate();
-        String text = STR."Ваш код для 2-х факторной аутентификации: \{code}";
+        String text = "Ваш код для 2-х факторной аутентификации: " + code;
         return NotificationDto.builder()
                 .params(List.of(new ParamDto("code", code)))
                 .subject("2-factor authentication")

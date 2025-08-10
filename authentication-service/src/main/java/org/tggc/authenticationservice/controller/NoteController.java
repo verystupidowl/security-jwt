@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tggc.authenticationservice.dto.domain.NoteDto;
-import org.tggc.authenticationservice.model.User;
 import org.tggc.authenticationservice.service.NoteService;
 
 import java.util.List;
@@ -37,9 +36,8 @@ public class NoteController {
     }
 
     @GetMapping("/myNotes")
-    public List<NoteDto> findNotesByUser(UsernamePasswordAuthenticationToken token) {
-        User user = (User) token.getPrincipal();
-        return noteService.findByOwner(user);
+    public List<NoteDto> findNotesByUser(@RequestHeader("X-User-Name") String email) {
+        return noteService.findByOwner(email);
     }
 
     @GetMapping("/{id}")
@@ -48,15 +46,13 @@ public class NoteController {
     }
 
     @GetMapping("/color/{color}")
-    public List<NoteDto> findByColor(@PathVariable String color, UsernamePasswordAuthenticationToken token) {
-        User user = (User) token.getPrincipal();
-        return noteService.findByColorAndUser("#%s".formatted(color), user);
+    public List<NoteDto> findByColor(@PathVariable String color, @RequestHeader("X-User-Name") String email) {
+        return noteService.findByColorAndUser("#%s".formatted(color), email);
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> addNote(@Valid @RequestBody NoteDto note, UsernamePasswordAuthenticationToken token) {
-        User user = (User) token.getPrincipal();
-        noteService.save(note, user);
+    public ResponseEntity<Boolean> addNote(@Valid @RequestBody NoteDto note, @RequestHeader("X-User-Name") String email) {
+        noteService.save(note, email);
         return ResponseEntity.status(CREATED).build();
     }
 
@@ -67,9 +63,8 @@ public class NoteController {
     }
 
     @PutMapping
-    public ResponseEntity<Boolean> editNote(@Valid @RequestBody NoteDto note, UsernamePasswordAuthenticationToken token) {
-        User user = (User) token.getPrincipal();
-        noteService.save(note, user);
+    public ResponseEntity<Boolean> editNote(@Valid @RequestBody NoteDto note, @RequestHeader("X-User-Name") String email) {
+        noteService.save(note, email);
         return ResponseEntity.status(OK).build();
     }
 

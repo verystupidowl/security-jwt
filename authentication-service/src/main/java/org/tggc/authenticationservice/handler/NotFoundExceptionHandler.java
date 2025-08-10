@@ -3,7 +3,7 @@ package org.tggc.authenticationservice.handler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.tggc.authenticationservice.dto.response.ErrorRs;
+import org.tggc.authapi.dto.ErrorRs;
 import org.tggc.authenticationservice.exception.NoteNotFoundException;
 
 import java.time.LocalDateTime;

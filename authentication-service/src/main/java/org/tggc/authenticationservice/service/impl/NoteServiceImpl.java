@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.tggc.authenticationservice.dto.domain.NoteDto;
 import org.tggc.authenticationservice.exception.NoteNotFoundException;
+import org.tggc.authenticationservice.exception.UserNotFoundException;
 import org.tggc.authenticationservice.mapper.NoteMapper;
 import org.tggc.authenticationservice.model.Note;
 import org.tggc.authenticationservice.model.User;
 import org.tggc.authenticationservice.repository.NoteRepository;
+import org.tggc.authenticationservice.repository.UserRepository;
 import org.tggc.authenticationservice.service.NoteService;
 
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.List;
 public class NoteServiceImpl implements NoteService {
     private final NoteRepository noteRepository;
     private final NoteMapper mapper;
+    private final UserRepository userRepository;
 
     @Override
     public List<NoteDto> findAll() {
@@ -28,14 +31,16 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     @Transactional
-    public NoteDto save(NoteDto dto, User user) {
+    public NoteDto save(NoteDto dto, String email) {
+        User owner = getUser(email);
         Note note = mapper.toEntity(dto);
-        note.setOwner(user);
+        note.setOwner(owner);
         return mapper.toDto(noteRepository.save(note));
     }
 
     @Override
-    public List<NoteDto> findByOwner(User user) {
+    public List<NoteDto> findByOwner(String email) {
+        User user = getUser(email);
         return noteRepository.findByOwner(user).stream()
                 .map(mapper::toDto)
                 .toList();
@@ -54,9 +59,15 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<NoteDto> findByColorAndUser(String color, User user) {
+    public List<NoteDto> findByColorAndUser(String color, String email) {
+        User user = getUser(email);
         return noteRepository.findByColorAndOwner(color, user).stream()
                 .map(mapper::toDto)
                 .toList();
+    }
+
+    private User getUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(email));
     }
 }

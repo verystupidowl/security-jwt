@@ -9,12 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.tggc.authenticationservice.dto.request.AuthenticationRq;
+import org.tggc.authapi.api.AuthApi;
+import org.tggc.authapi.dto.AuthenticationRq;
+import org.tggc.authapi.dto.AuthenticationRs;
+import org.tggc.authapi.dto.RegisterRq;
 import org.tggc.authenticationservice.dto.request.ChangePasswordRq;
-import org.tggc.authenticationservice.dto.request.RegisterRq;
 import org.tggc.authenticationservice.dto.request.SendCodeRq;
 import org.tggc.authenticationservice.dto.request.VerifyRq;
-import org.tggc.authenticationservice.dto.response.AuthenticationRs;
 import org.tggc.authenticationservice.service.AuthenticationService;
 import org.tggc.authenticationservice.service.UserService;
 
@@ -24,7 +25,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequestMapping("/api/v1/auth")
 @CrossOrigin
 @RequiredArgsConstructor
-public class AuthenticationController {
+public class AuthenticationController implements AuthApi {
     private final AuthenticationService authenticationService;
     private final UserService userService;
 

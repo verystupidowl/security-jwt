@@ -25,7 +25,7 @@ public class EmailVerificationSender extends AbstractSender {
     protected NotificationDto.NotificationDtoBuilder getNotificationDtoBuilder() {
         String code = CodeGenerator.generate();
         return NotificationDto.builder()
-                .text(STR."Ваш код проверки для регистрации: \{code}")
+                .text("Ваш код проверки для регистрации: " + code)
                 .params(List.of(new ParamDto("code", code)))
                 .subject("Подтверждение почты");
     }
