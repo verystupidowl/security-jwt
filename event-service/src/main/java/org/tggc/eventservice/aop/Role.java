@@ -1,4 +1,4 @@
-package org.tggc.authenticationservice.model;
+package org.tggc.eventservice.aop;
 
 public enum Role {
     USER, ADMIN, ORGANIZER

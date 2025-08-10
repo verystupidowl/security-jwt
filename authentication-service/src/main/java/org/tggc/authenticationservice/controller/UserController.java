@@ -10,7 +10,7 @@ import org.tggc.authenticationservice.dto.domain.UserDto;
 import org.tggc.authenticationservice.service.UserService;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/user")
 @CrossOrigin
 @RequiredArgsConstructor
 public class UserController {
