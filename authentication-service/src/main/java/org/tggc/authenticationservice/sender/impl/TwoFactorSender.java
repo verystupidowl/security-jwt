@@ -2,10 +2,10 @@ package org.tggc.authenticationservice.sender.impl;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.tggc.authenticationservice.dto.notification.NotificationDto;
-import org.tggc.authenticationservice.dto.notification.ParamDto;
 import org.tggc.authenticationservice.util.CodeGenerator;
+import org.tggc.notificationapi.dto.NotificationRq;
 import org.tggc.notificationapi.dto.NotificationType;
+import org.tggc.notificationapi.dto.ParamDto;
 
 import java.util.List;
 
@@ -17,17 +17,17 @@ public class TwoFactorSender extends AbstractSender {
     }
 
     @Override
-    protected NotificationDto.NotificationDtoBuilder getNotificationDtoBuilder() {
-        String code = CodeGenerator.generate();
-        String text = "Ваш код для 2-х факторной аутентификации: " + code;
-        return NotificationDto.builder()
-                .params(List.of(new ParamDto("code", code)))
-                .subject("2-factor authentication")
-                .text(text);
+    public NotificationType getNotificationType() {
+        return NotificationType.TWO_FACTOR;
     }
 
     @Override
-    public NotificationType getNotificationType() {
-        return NotificationType.TWO_FACTOR;
+    protected NotificationRq.NotificationRqBuilder getNotificationDtoBuilder() {
+        String code = CodeGenerator.generate();
+        String text = "Ваш код для 2-х факторной аутентификации: " + code;
+        return NotificationRq.builder()
+                .params(List.of(new ParamDto("code", code)))
+                .subject("2-factor authentication")
+                .text(text);
     }
 }

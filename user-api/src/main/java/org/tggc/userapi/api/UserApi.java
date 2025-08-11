@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.tggc.userapi.dto.UserDto;
 
 import java.util.List;
@@ -17,4 +18,7 @@ public interface UserApi {
 
     @PostMapping("/getByIds")
     List<UserDto> getUsers(@RequestBody List<Long> ids);
+
+    @GetMapping("/get-email")
+    String getEmailById(@RequestParam("userId") Long userId);
 }

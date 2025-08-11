@@ -25,4 +25,6 @@ public interface UserService {
     UserDto getById(long id);
 
     List<UserDto> getByIds(List<Long> ids);
+
+    String getEmailById(Long userId);
 }

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.tggc.eventservice.model.Event;
 import org.tggc.eventservice.repository.EventRepository;
 import org.tggc.eventservice.sender.StartEventSender;
+import org.tggc.notificationapi.dto.NotificationType;
+import org.tggc.userapi.api.UserApi;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.List;
 public class EventStartScheduler {
     private final EventRepository eventRepository;
     private final StartEventSender startEventSender;
+    private final UserApi userApi;
 
     @Scheduled(fixedRate = 3600000)
     public void checkEventsStartingSoon() {
@@ -24,7 +27,8 @@ public class EventStartScheduler {
         List<Event> eventsStartingSoon = eventRepository.findByEventDateBetween(now, soon);
 
         for (Event event : eventsStartingSoon) {
-            startEventSender.sendStartEvent(event);
+            String to = userApi.getEmailById(event.getCreatorId());
+            startEventSender.send(to, event, NotificationType.START_EVENT);
         }
     }
 }

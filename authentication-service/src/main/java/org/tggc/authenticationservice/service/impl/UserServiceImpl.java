@@ -73,4 +73,11 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::toApiDto)
                 .toList();
     }
+
+    @Override
+    public String getEmailById(Long userId) {
+        return userRepository.findById(userId)
+                .map(User::getEmail)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+    }
 }
