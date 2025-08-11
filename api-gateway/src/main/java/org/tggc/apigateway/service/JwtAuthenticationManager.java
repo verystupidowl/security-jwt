@@ -6,6 +6,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.tggc.apigateway.principal.JwtUserPrincipal;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -19,13 +20,21 @@ public class JwtAuthenticationManager implements ReactiveAuthenticationManager {
     public Mono<Authentication> authenticate(Authentication authentication) {
         String token = authentication.getCredentials().toString();
         if (jwtService.validateToken(token)) {
-            String username = jwtService.getUsername(token);
-            List<SimpleGrantedAuthority> authorities = jwtService.getRoles(token)
+            String username = jwtService.extractEmail(token);
+            List<SimpleGrantedAuthority> authorities = jwtService.extractRoles(token)
                     .stream()
                     .map(SimpleGrantedAuthority::new)
                     .toList();
-            return Mono.just(new UsernamePasswordAuthenticationToken(username, token, authorities));
+            JwtUserPrincipal principal = JwtUserPrincipal.builder()
+                    .id(getId(token))
+                    .email(username)
+                    .build();
+            return Mono.just(new UsernamePasswordAuthenticationToken(principal, token, authorities));
         }
         return Mono.empty();
+    }
+
+    private Long getId(String token) {
+        return jwtService.extractId(token);
     }
 }

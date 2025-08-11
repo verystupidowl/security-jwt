@@ -18,13 +18,13 @@ public class AuthenticationService {
 
     public TokenRs register(RegisterRq rq) {
         AuthenticationRs register = authApi.register(rq);
-        String token = jwtService.generateToken(register.email(), register.roles());
+        String token = jwtService.generateToken(register.email(), register.roles(), register.userId());
         return new TokenRs(token);
     }
 
     public TokenRs authenticate(AuthenticationRq rq) {
         AuthenticationRs authenticate = authApi.authenticate(rq);
-        String token = jwtService.generateToken(authenticate.email(), authenticate.roles());
+        String token = jwtService.generateToken(authenticate.email(), authenticate.roles(), authenticate.userId());
         return new TokenRs(token);
     }
 }

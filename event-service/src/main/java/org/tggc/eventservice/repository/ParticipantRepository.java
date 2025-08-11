@@ -4,10 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.tggc.eventservice.model.Participant;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
 
-    Optional<Participant> findByEventId(Long eventId);
+    List<Participant> findByEventId(Long eventId);
 }

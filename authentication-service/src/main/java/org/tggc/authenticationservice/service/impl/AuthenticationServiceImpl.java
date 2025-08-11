@@ -47,7 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .twoFactorEnabled(request.twoFactorEnabled())
                 .build();
         userRepository.save(user);
-        return new AuthenticationRs(user.getEmail(), List.of(user.getRole().name()));
+        return new AuthenticationRs(user.getEmail(), List.of(user.getRole().name()), user.getId());
     }
 
     @Override
@@ -56,7 +56,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow(() -> new UsernameNotFoundException(request.email()));
 
         if (passwordService.checkPassword(request.password(), user.getPassword())) {
-            return new AuthenticationRs(user.getEmail(), List.of(user.getRole().name()));
+            return new AuthenticationRs(user.getEmail(), List.of(user.getRole().name()), user.getId());
         }
         throw new IncorrectPasswordException(request.email());
     }
