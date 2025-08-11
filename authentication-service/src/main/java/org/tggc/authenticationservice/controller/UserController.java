@@ -26,11 +26,6 @@ public class UserController implements UserApi {
         return userService.getByIds(ids);
     }
 
-    @Override
-    public String getEmailById(Long userId) {
-        return userService.getEmailById(userId);
-    }
-
     @GetMapping
     public UserRs findUser(@RequestHeader("X-User-Name") String email) {
         return userService.getByEmail(email);

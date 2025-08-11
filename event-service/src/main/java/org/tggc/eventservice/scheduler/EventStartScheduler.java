@@ -22,12 +22,13 @@ public class EventStartScheduler {
     @Scheduled(fixedRate = 3600000)
     public void checkEventsStartingSoon() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime soon = now.plusMinutes(1);
+        LocalDateTime soon = now.plusHours(1);
 
         List<Event> eventsStartingSoon = eventRepository.findByEventDateBetween(now, soon);
 
         for (Event event : eventsStartingSoon) {
-            String to = userApi.getEmailById(event.getCreatorId());
+            String to = userApi.getUserById(event.getCreatorId()).email();
+
             startEventSender.send(to, event, NotificationType.START_EVENT);
         }
     }
