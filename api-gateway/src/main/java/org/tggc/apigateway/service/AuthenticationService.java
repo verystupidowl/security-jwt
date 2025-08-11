@@ -6,25 +6,38 @@ import org.springframework.stereotype.Service;
 import org.tggc.apigateway.dto.TokenRs;
 import org.tggc.authapi.api.AuthApi;
 import org.tggc.authapi.dto.AuthenticationRq;
-import org.tggc.authapi.dto.AuthenticationRs;
 import org.tggc.authapi.dto.RegisterRq;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
-    private final JwtService jwtService;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     private final AuthApi authApi;
+    private final JwtService jwtService;
 
-    public TokenRs register(RegisterRq rq) {
-        AuthenticationRs register = authApi.register(rq);
-        String token = jwtService.generateToken(register.email(), register.roles(), register.userId());
-        return new TokenRs(token);
+    public Mono<TokenRs> register(RegisterRq rq) {
+        return authApi.register(rq)
+                .map(authenticationRs -> {
+                    String token = jwtService.generateToken(
+                            authenticationRs.email(),
+                            authenticationRs.roles(),
+                            authenticationRs.userId());
+                    return new TokenRs(token);
+                });
+
     }
 
-    public TokenRs authenticate(AuthenticationRq rq) {
-        AuthenticationRs authenticate = authApi.authenticate(rq);
-        String token = jwtService.generateToken(authenticate.email(), authenticate.roles(), authenticate.userId());
-        return new TokenRs(token);
+    public Mono<TokenRs> authenticate(AuthenticationRq rq) {
+        return authApi.authenticate(rq)
+                .map(authenticationRs -> {
+                    String token = jwtService.generateToken(
+                            authenticationRs.email(),
+                            authenticationRs.roles(),
+                            authenticationRs.userId()
+                    );
+                    return new TokenRs(token);
+                });
     }
 }

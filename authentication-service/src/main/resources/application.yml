@@ -7,20 +7,9 @@ spring:
     simple-notification: simple-notification-topic
   liquibase:
     enabled: true
-  datasource:
+  r2dbc:
     url: jdbc:postgresql://localhost:5432/spring-jwt
     username: root
     password: root
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    #    hibernate:
-    #      ddl-auto: create-drop
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
 server:
   port: 8081

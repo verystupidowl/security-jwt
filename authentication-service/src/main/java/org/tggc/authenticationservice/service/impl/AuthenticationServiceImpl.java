@@ -11,6 +11,7 @@ import org.tggc.authenticationservice.dto.request.SendCodeRq;
 import org.tggc.authenticationservice.dto.request.VerifyRq;
 import org.tggc.authenticationservice.exception.IncorrectPasswordException;
 import org.tggc.authenticationservice.exception.PasswordsNotMatchException;
+import org.tggc.authenticationservice.exception.UserAlreadyCreatedException;
 import org.tggc.authenticationservice.exception.UserNotFoundException;
 import org.tggc.authenticationservice.exception.UsernameNotFoundException;
 import org.tggc.authenticationservice.model.Role;
@@ -22,6 +23,8 @@ import org.tggc.authenticationservice.service.AuthenticationService;
 import org.tggc.authenticationservice.service.PasswordService;
 import org.tggc.notificationapi.api.CodeApi;
 import org.tggc.notificationapi.dto.NotificationType;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 
@@ -34,57 +37,77 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordService passwordService;
 
     @Override
-    public AuthenticationRs register(RegisterRq request) {
-        if (!request.password().equals(request.passwordConfirmation())) {
-            throw new PasswordsNotMatchException("Passwords do not match");
+    public Mono<AuthenticationRs> register(RegisterRq rq) {
+        if (!rq.password().equals(rq.passwordConfirmation())) {
+            return Mono.error(new PasswordsNotMatchException("Passwords do not match"));
         }
-        User user = User.builder()
-                .firstname(request.firstname())
-                .lastname(request.lastname())
-                .email(request.email())
-                .password(passwordService.hash(request.password()))
-                .role(Role.USER)
-                .twoFactorEnabled(request.twoFactorEnabled())
-                .build();
-        userRepository.save(user);
-        return new AuthenticationRs(user.getEmail(), List.of(user.getRole().name()), user.getId());
+        return userRepository.findByEmail(rq.email())
+                .flatMap(existingUser -> Mono.error(new UserAlreadyCreatedException(existingUser.getEmail())))
+                .switchIfEmpty(Mono.defer(() -> {
+                    User user = User.builder()
+                            .firstname(rq.firstname())
+                            .lastname(rq.lastname())
+                            .email(rq.email())
+                            .password(passwordService.hash(rq.password()))
+                            .role(Role.USER.name())
+                            .twoFactorEnabled(rq.twoFactorEnabled())
+                            .build();
+                    return userRepository.save(user);
+                }))
+                .cast(User.class)
+                .map(user -> new AuthenticationRs(user.getEmail(), List.of(user.getRole()), user.getId()));
     }
 
     @Override
-    public AuthenticationRs authenticate(AuthenticationRq request) {
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new UsernameNotFoundException(request.email()));
+    public Mono<AuthenticationRs> authenticate(AuthenticationRq request) {
+        return userRepository.findByEmail(request.email())
+                .flatMap(user -> {
+                    if (passwordService.checkPassword(request.password(), user.getPassword())) {
+                        return Mono.just(new AuthenticationRs(
+                                user.getEmail(),
+                                List.of(user.getRole()),
+                                user.getId())
+                        );
+                    }
+                    return Mono.error(new IncorrectPasswordException(request.email()));
+                })
+                .switchIfEmpty(Mono.error(new UsernameNotFoundException(request.email())));
 
-        if (passwordService.checkPassword(request.password(), user.getPassword())) {
-            return new AuthenticationRs(user.getEmail(), List.of(user.getRole().name()), user.getId());
-        }
-        throw new IncorrectPasswordException(request.email());
+
     }
 
     @Override
-    public void sendCode(SendCodeRq dto) {
-        Sender sender = senderFactory.getSender(dto.type());
-        sender.send(dto.email(), dto.type());
+    public Mono<Void> sendCode(SendCodeRq dto) {
+        return Mono.fromRunnable(() -> {
+            Sender sender = senderFactory.getSender(dto.type());
+            sender.send(dto.email(), dto.type());
+        });
     }
 
     @Override
-    public Boolean verifyCode(VerifyRq dto) {
-        String code = dto.code();
-        String email = dto.email();
-        String codeFromDb = codeApi.getCode(email, NotificationType.CHANGE_PASSWORD);
-        return code.equals(codeFromDb);
+    public Mono<Boolean> verifyCode(VerifyRq dto) {
+        return Mono.fromCallable(() -> codeApi.getCode(dto.email(), NotificationType.CHANGE_PASSWORD_CONFIRMATION))
+                .subscribeOn(Schedulers.boundedElastic())
+                .map(codeFromDb -> dto.code().equals(codeFromDb));
     }
 
     @Override
     @Transactional
-    public void changePassword(ChangePasswordRq dto) {
+    public Mono<Void> changePassword(ChangePasswordRq dto) {
         if (!dto.password().equals(dto.passwordConfirmation())) {
-            throw new PasswordsNotMatchException("Passwords do not match");
+            return Mono.error(new PasswordsNotMatchException("Passwords do not match"));
         }
-        User user = userRepository.findByEmail(dto.email())
-                .orElseThrow(() -> new UserNotFoundException(dto.email()));
-        user.setPassword(passwordService.hash(dto.password()));
-        codeApi.deleteCode(dto.email(), NotificationType.CHANGE_PASSWORD);
-        userRepository.save(user);
+        return userRepository.findByEmail(dto.email())
+                .switchIfEmpty(Mono.error(new UserNotFoundException(dto.email())))
+                .flatMap(user -> {
+                    user.setPassword(passwordService.hash(dto.password()));
+                    return userRepository.save(user)
+                            .then(Mono.fromRunnable(() -> codeApi.deleteCode(dto.email(), NotificationType.CHANGE_PASSWORD_CONFIRMATION))
+                                    .subscribeOn(Schedulers.boundedElastic()))
+                            .then(Mono.fromRunnable(() -> {
+                                Sender sender = senderFactory.getSender(NotificationType.CHANGED_PASSWORD);
+                                sender.send(dto.email(), NotificationType.CHANGED_PASSWORD);
+                            }));
+                });
     }
 }

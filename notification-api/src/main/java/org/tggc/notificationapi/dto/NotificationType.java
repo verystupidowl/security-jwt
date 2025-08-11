@@ -1,9 +1,10 @@
 package org.tggc.notificationapi.dto;
 
 public enum NotificationType {
-    CHANGE_PASSWORD("change-password"),
+    CHANGE_PASSWORD_CONFIRMATION("change-password-confirmation"),
     EMAIL_CONFIRMATION("email-confirmation"),
     TWO_FACTOR("two-factor"),
+    CHANGED_PASSWORD("changed-password"),
     START_EVENT(null);
 
     private final String key;

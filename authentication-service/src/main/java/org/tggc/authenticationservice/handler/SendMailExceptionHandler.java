@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.tggc.authapi.dto.ErrorRs;
 import org.tggc.authenticationservice.exception.SendMailException;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
@@ -15,11 +16,11 @@ import java.time.LocalDateTime;
 public class SendMailExceptionHandler {
 
     @ExceptionHandler(SendMailException.class)
-    public ResponseEntity<ErrorRs> sendMailExceptionHandler(SendMailException e) {
-        return ResponseEntity.internalServerError().body(new ErrorRs(
+    public Mono<ResponseEntity<ErrorRs>> sendMailExceptionHandler(SendMailException e) {
+        return Mono.just(ResponseEntity.internalServerError().body(new ErrorRs(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 e.getMessage(),
                 LocalDateTime.now()
-        ));
+        )));
     }
 }

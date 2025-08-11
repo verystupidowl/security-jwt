@@ -12,15 +12,15 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class ChangePasswordSender extends AbstractSender {
+public class ChangePasswordConfirmationSender extends AbstractSender {
 
-    public ChangePasswordSender(KafkaTemplate<String, Object> kafkaTemplate) {
+    public ChangePasswordConfirmationSender(KafkaTemplate<String, Object> kafkaTemplate) {
         super(kafkaTemplate);
     }
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.CHANGE_PASSWORD;
+        return NotificationType.CHANGE_PASSWORD_CONFIRMATION;
     }
 
     @Override
