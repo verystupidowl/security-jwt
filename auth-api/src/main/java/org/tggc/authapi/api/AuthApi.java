@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@ReactiveFeignClient(name = "auth-api", path = "/auth")
+@ReactiveFeignClient(name = "auth-api", url = "http://localhost:8081/auth")
 public interface AuthApi {
 
     @PostMapping("/authenticate")

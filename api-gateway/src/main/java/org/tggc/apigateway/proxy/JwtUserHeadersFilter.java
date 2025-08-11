@@ -32,7 +32,7 @@ public class JwtUserHeadersFilter implements GlobalFilter, Ordered {
                     ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
                             .header("X-User-Name", auth.getName())
                             .header("X-User-Id", getId(auth))
-                            .header("X-roles", getRoles(auth.getAuthorities()))
+                            .header("X-User-roles", getRoles(auth.getAuthorities()))
                             .build();
 
                     ServerWebExchange mutatedExchange = exchange.mutate()

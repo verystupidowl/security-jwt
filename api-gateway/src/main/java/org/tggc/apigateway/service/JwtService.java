@@ -54,7 +54,7 @@ public class JwtService {
     }
 
     public Long extractId(String token) {
-        return extractClaim(token, c -> c.get("id", Long.class));
+        return extractClaim(token, c -> c.get("userId", Long.class));
     }
 
 

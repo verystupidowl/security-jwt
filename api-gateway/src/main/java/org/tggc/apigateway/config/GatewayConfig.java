@@ -14,9 +14,12 @@ public class GatewayConfig {
                 .route("auth-service", r -> r
                         .path("/api/v1/auth/**")
                         .uri("http://localhost:8081/auth"))
-                .route("note-service", r -> r
-                        .path("/api/v1/event/**")
-                        .uri("http://localhost:8082/event"))
+                .route("event-service", r -> r
+                        .path("/api/v1/events/**")
+                        .uri("http://localhost:8082"))
+                .route("user-service", r -> r
+                        .path("/api/v1/user/**")
+                        .uri("http://localhost:8083"))
                 .build();
     }
 }

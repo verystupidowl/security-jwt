@@ -8,7 +8,7 @@ spring:
   liquibase:
     enabled: true
   r2dbc:
-    url: jdbc:postgresql://localhost:5432/spring-jwt
+    url: r2dbc:postgresql://localhost:5432/spring-jwt
     username: root
     password: root
 server:
