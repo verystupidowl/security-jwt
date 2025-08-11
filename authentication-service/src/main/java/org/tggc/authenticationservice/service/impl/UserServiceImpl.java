@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.tggc.authapi.dto.AuthenticationRs;
 import org.tggc.authapi.dto.RegisterRq;
-import org.tggc.authenticationservice.dto.domain.UserDto;
+import org.tggc.authenticationservice.dto.domain.UserRs;
 import org.tggc.authenticationservice.exception.UserAlreadyCreatedException;
 import org.tggc.authenticationservice.exception.UserNotFoundException;
 import org.tggc.authenticationservice.mapper.UserMapper;
@@ -13,6 +13,7 @@ import org.tggc.authenticationservice.model.User;
 import org.tggc.authenticationservice.repository.UserRepository;
 import org.tggc.authenticationservice.service.AuthenticationService;
 import org.tggc.authenticationservice.service.UserService;
+import org.tggc.userapi.dto.UserDto;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getByEmail(String email) {
+    public UserRs getByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
         return userMapper.toDto(user);
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserDto dto) {
+    public void save(UserRs dto) {
         User user = userMapper.toEntity(dto);
         userRepository.save(user);
     }
@@ -56,5 +57,20 @@ public class UserServiceImpl implements UserService {
     public User findById(String id) {
         return userRepository.findById(Long.getLong(id))
                 .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    @Override
+    public UserDto getById(long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        return userMapper.toApiDto(user);
+    }
+
+    @Override
+    public List<UserDto> getByIds(List<Long> ids) {
+        return userRepository.findAllById(ids).stream()
+                .map(userMapper::toApiDto)
+                .toList();
     }
 }

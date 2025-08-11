@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-participants-table
+      author: alexey
+      changes:
+        - createTable:
+            tableName: participants
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: event_id
+                  type: BIGSERIAL
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_participants_event
+                    referencedTableName: events
+                    referencedColumnNames: id
+              - column:
+                  name: user_id
+                  type: BIGSERIAL
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+              - column:
+                  name: joined_at
+                  type: timestamp
+                  constraints:
+                    nullable: false

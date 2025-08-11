@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.tggc.authenticationservice.dto.notification.NotificationDto;
 import org.tggc.authenticationservice.sender.Sender;
+import org.tggc.notificationapi.dto.NotificationRq;
 import org.tggc.notificationapi.dto.NotificationType;
 
 @Slf4j
@@ -19,7 +19,7 @@ public abstract class AbstractSender implements Sender {
 
     @Override
     public void send(String email, NotificationType type) {
-        NotificationDto notificationDto = getNotificationDtoBuilder()
+        NotificationRq notificationDto = getNotificationDtoBuilder()
                 .to(email)
                 .type(type)
                 .build();
@@ -27,5 +27,5 @@ public abstract class AbstractSender implements Sender {
         log.info("Result sent to topic: {}", topic);
     }
 
-    protected abstract NotificationDto.NotificationDtoBuilder getNotificationDtoBuilder();
+    protected abstract NotificationRq.NotificationRqBuilder getNotificationDtoBuilder();
 }

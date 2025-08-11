@@ -20,10 +20,11 @@ public class JwtService {
     @Value("${properties.secret}")
     private String secretKey;
 
-    public String generateToken(String email, List<String> roles) {
+    public String generateToken(String email, List<String> roles, Long userId) {
         return Jwts.builder()
                 .setSubject(email)
                 .claim("roles", roles)
+                .claim("userId", userId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + getExpirationMs()))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -39,16 +40,21 @@ public class JwtService {
         }
     }
 
-    public String getUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public List<String> getRoles(String token) {
+    @SuppressWarnings("unchecked")
+    public List<String> extractRoles(String token) {
         return extractClaim(token, claim -> claim.get("roles", List.class));
     }
 
     private Long getExpirationMs() {
         return (long) (1000 * 60 * 60);
+    }
+
+    public Long extractId(String token) {
+        return extractClaim(token, c -> c.get("id", Long.class));
     }
 
 

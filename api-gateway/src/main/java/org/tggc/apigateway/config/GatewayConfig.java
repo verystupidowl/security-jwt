@@ -13,10 +13,10 @@ public class GatewayConfig {
         return builder.routes()
                 .route("auth-service", r -> r
                         .path("/api/v1/auth/**")
-                        .uri("http://localhost:8081"))
+                        .uri("http://localhost:8081/auth"))
                 .route("note-service", r -> r
-                        .path("/api/v1/notes/**")
-                        .uri("http://localhost:8082"))
+                        .path("/api/v1/event/**")
+                        .uri("http://localhost:8082/event"))
                 .build();
     }
 }

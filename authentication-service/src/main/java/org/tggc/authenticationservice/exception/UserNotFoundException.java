@@ -6,4 +6,8 @@ public class UserNotFoundException extends BadRequestException {
     public UserNotFoundException(String email) {
         super(MESSAGE.concat(email));
     }
+
+    public UserNotFoundException(long id) {
+        super(String.format(MESSAGE, id));
+    }
 }

@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import org.tggc.apigateway.principal.JwtUserPrincipal;
 import reactor.core.publisher.Mono;
 
 import java.util.stream.Collectors;
@@ -30,6 +31,7 @@ public class JwtUserHeadersFilter implements GlobalFilter, Ordered {
                     Authentication auth = context.getAuthentication();
                     ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
                             .header("X-User-Name", auth.getName())
+                            .header("X-User-Id", getId(auth))
                             .header("X-roles", getRoles(auth.getAuthorities()))
                             .build();
 
@@ -46,5 +48,12 @@ public class JwtUserHeadersFilter implements GlobalFilter, Ordered {
         return authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
+    }
+
+    private String getId(Authentication auth) {
+        if (auth.getPrincipal() instanceof JwtUserPrincipal principal) {
+            return String.valueOf(principal.getId());
+        }
+        return null;
     }
 }
