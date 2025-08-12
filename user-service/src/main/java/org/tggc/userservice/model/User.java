@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "usr")
 @Getter
@@ -35,5 +37,8 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     private Boolean twoFactorEnabled;
+    private Boolean blocked;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
 

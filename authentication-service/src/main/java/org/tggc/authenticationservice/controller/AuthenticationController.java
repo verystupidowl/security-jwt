@@ -12,13 +12,12 @@ import org.tggc.authapi.dto.AuthenticationRs;
 import org.tggc.authapi.dto.RegisterRq;
 import org.tggc.authenticationservice.dto.request.ChangePasswordRq;
 import org.tggc.authenticationservice.dto.request.SendCodeRq;
-import org.tggc.authenticationservice.dto.request.VerifyRq;
 import org.tggc.authenticationservice.service.AuthenticationService;
 import reactor.core.publisher.Mono;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthenticationController implements AuthApi {
     private final AuthenticationService authenticationService;
 
@@ -35,11 +34,6 @@ public class AuthenticationController implements AuthApi {
     @PostMapping("/send-code")
     public Mono<Void> sendCode(@Valid @RequestBody SendCodeRq dto) {
         return authenticationService.sendCode(dto);
-    }
-
-    @PostMapping("/verify-code")
-    public Mono<Boolean> verifyCode(@RequestBody VerifyRq dto) {
-        return authenticationService.verifyCode(dto);
     }
 
     @PostMapping("/change-password")

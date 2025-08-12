@@ -49,3 +49,18 @@ databaseChangeLog:
                   type: boolean
                   constraints:
                     nullable: false
+              - column:
+                  name: blocked
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: createdAt
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updatedAt
+                  type: timestamp
+                  constraints:
+                    nullable: false

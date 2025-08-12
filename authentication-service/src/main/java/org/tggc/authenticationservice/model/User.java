@@ -9,6 +9,8 @@ import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDateTime;
+
 @Table(name = "usr")
 @Getter
 @Setter
@@ -25,4 +27,7 @@ public class User {
     private String password;
     private String role;
     private Boolean twoFactorEnabled;
+    private Boolean blocked;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
