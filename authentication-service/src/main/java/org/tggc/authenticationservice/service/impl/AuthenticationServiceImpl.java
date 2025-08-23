@@ -44,12 +44,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Mono<AuthenticationRs> register(RegisterRq rq) {
         if (!rq.password().equals(rq.passwordConfirmation())) {
-            return Mono.error(new PasswordsNotMatchException("Passwords do not match"));
+            return Mono.error(new PasswordsNotMatchException());
         }
         return userRepository.findByEmail(rq.email())
                 .flatMap(existingUser -> {
                     log.info("user with email {} already exists", existingUser.getEmail());
-                    return Mono.error(new UserAlreadyCreatedException());
+                    return Mono.error(new UserAlreadyCreatedException(existingUser.getEmail()));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     VerifyRq verifyRq = new VerifyRq(
@@ -59,7 +59,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     );
 
                     if (!verifyCode(verifyRq)) {
-                        return Mono.error(new IncorrectCodeException("Неправильный код"));
+                        return Mono.error(new IncorrectCodeException());
                     }
                     User user = User.builder()
                             .firstname(rq.firstname())
@@ -109,7 +109,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public Mono<Void> changePassword(ChangePasswordRq dto) {
         if (!dto.password().equals(dto.passwordConfirmation())) {
-            return Mono.error(new PasswordsNotMatchException("Passwords do not match"));
+            return Mono.error(new PasswordsNotMatchException());
         }
         return userRepository.findByEmail(dto.email())
                 .switchIfEmpty(Mono.error(new UserNotFoundException(dto.email())))
@@ -138,14 +138,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private Mono<Void> checkPassword(String password, String passwordFromDb) {
         if (!passwordService.checkPassword(password, passwordFromDb)) {
-            return Mono.error(new IncorrectPasswordException("Incorrect Password"));
+            return Mono.error(new IncorrectPasswordException());
         }
         return Mono.empty();
     }
 
     private Mono<Void> checkBlocked(Boolean blocked) {
         if (Boolean.TRUE.equals(blocked)) {
-            return Mono.error(new UserBlockedException("User blocked"));
+            return Mono.error(new UserBlockedException());
         }
         return Mono.empty();
     }

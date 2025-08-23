@@ -1,9 +1,11 @@
 package org.tggc.authenticationservice.exception;
 
-public class IncorrectPasswordException extends RuntimeException {
-    private static final String MESSAGE = "Incorrect password for email %s";
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.tggc.authenticationservice.exception.message.ExceptionMessage.INCORRECT_PASSWORD;
 
-    public IncorrectPasswordException(String email) {
-        super(MESSAGE.formatted(email));
+public class IncorrectPasswordException extends GlobalException {
+
+    public IncorrectPasswordException() {
+        super(INCORRECT_PASSWORD, UNAUTHORIZED);
     }
 }

@@ -1,8 +1,16 @@
 package org.tggc.authenticationservice.exception;
 
-public class BadRequestException extends RuntimeException {
+import org.tggc.authenticationservice.exception.message.ExceptionMessage;
 
-    public BadRequestException(String message) {
-        super(message);
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
+public class BadRequestException extends GlobalException {
+
+    public BadRequestException(ExceptionMessage exceptionMessage) {
+        super(exceptionMessage.getMessage(), BAD_REQUEST);
+    }
+
+    public BadRequestException(ExceptionMessage exceptionMessage, Object... formatted) {
+        super(exceptionMessage, BAD_REQUEST, formatted);
     }
 }

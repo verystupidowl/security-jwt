@@ -1,8 +1,11 @@
 package org.tggc.authenticationservice.exception;
 
-public class UserBlockedException extends RuntimeException {
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.tggc.authenticationservice.exception.message.ExceptionMessage.USER_BLOCKED;
 
-    public UserBlockedException(String message) {
-        super(message);
+public class UserBlockedException extends GlobalException {
+
+    public UserBlockedException() {
+        super(USER_BLOCKED, FORBIDDEN);
     }
 }
