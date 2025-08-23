@@ -9,4 +9,6 @@ public interface UserService {
     UserDto getUserById(long id);
 
     List<UserDto> getUsersByIds(List<Long> ids);
+
+    void blockUser(Long userId, Boolean block);
 }

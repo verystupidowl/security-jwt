@@ -14,6 +14,7 @@ import org.tggc.authenticationservice.exception.IncorrectCodeException;
 import org.tggc.authenticationservice.exception.IncorrectPasswordException;
 import org.tggc.authenticationservice.exception.PasswordsNotMatchException;
 import org.tggc.authenticationservice.exception.UserAlreadyCreatedException;
+import org.tggc.authenticationservice.exception.UserBlockedException;
 import org.tggc.authenticationservice.exception.UserNotFoundException;
 import org.tggc.authenticationservice.exception.UsernameNotFoundException;
 import org.tggc.authenticationservice.model.Role;
@@ -51,7 +52,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     return Mono.error(new UserAlreadyCreatedException());
                 })
                 .switchIfEmpty(Mono.defer(() -> {
-                    if (!verifyCode(new VerifyRq(rq.verificationCode(), rq.email()))) {
+                    VerifyRq verifyRq = new VerifyRq(
+                            rq.verificationCode(),
+                            rq.email(),
+                            NotificationType.EMAIL_CONFIRMATION
+                    );
+
+                    if (!verifyCode(verifyRq)) {
                         return Mono.error(new IncorrectCodeException("Неправильный код"));
                     }
                     User user = User.builder()
@@ -78,16 +85,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Mono<AuthenticationRs> authenticate(AuthenticationRq request) {
         return userRepository.findByEmail(request.email())
-                .flatMap(user -> {
-                    if (passwordService.checkPassword(request.password(), user.getPassword())) {
-                        return Mono.just(new AuthenticationRs(
+                .flatMap(user -> checkUser(user, request)
+                        .then(Mono.just(new AuthenticationRs(
                                 user.getEmail(),
                                 List.of(user.getRole()),
                                 user.getId())
-                        );
-                    }
-                    return Mono.error(new IncorrectPasswordException(request.email()));
-                })
+                        )))
                 .switchIfEmpty(Mono.defer(() -> {
                     log.error("email {}", request.email());
                     return Mono.error(new UsernameNotFoundException(request.email()));
@@ -124,7 +127,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     private boolean verifyCode(VerifyRq dto) {
-        String code = codeApi.getCode(dto.email(), NotificationType.CHANGE_PASSWORD_CONFIRMATION);
+        String code = codeApi.getCode(dto.email(), dto.notificationType());
         return dto.code().equals(code);
+    }
+
+    private Mono<Void> checkUser(User user, AuthenticationRq rq) {
+        return checkPassword(rq.password(), user.getPassword())
+                .then(checkBlocked(user.getBlocked()));
+    }
+
+    private Mono<Void> checkPassword(String password, String passwordFromDb) {
+        if (!passwordService.checkPassword(password, passwordFromDb)) {
+            return Mono.error(new IncorrectPasswordException("Incorrect Password"));
+        }
+        return Mono.empty();
+    }
+
+    private Mono<Void> checkBlocked(Boolean blocked) {
+        if (Boolean.TRUE.equals(blocked)) {
+            return Mono.error(new UserBlockedException("User blocked"));
+        }
+        return Mono.empty();
     }
 }

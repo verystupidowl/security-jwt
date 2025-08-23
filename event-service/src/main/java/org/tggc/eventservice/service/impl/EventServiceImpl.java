@@ -31,10 +31,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventRs getEventById(Long eventId) {
-        Event event = eventRepository.findById(eventId)
+        return eventRepository.findById(eventId)
+                .map(eventMapper::toEventRs)
                 .orElseThrow(() -> new EventNotFoundException(String.valueOf(eventId)));
-
-        return eventMapper.toEventRs(event);
     }
 
     @Override
