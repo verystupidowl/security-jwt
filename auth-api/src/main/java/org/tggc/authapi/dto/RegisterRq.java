@@ -26,6 +26,8 @@ public record RegisterRq(
         @NotEmpty
         String passwordConfirmation,
         @NotNull
-        Boolean twoFactorEnabled
+        Boolean twoFactorEnabled,
+        @NotEmpty
+        String verificationCode
 ) {
 }

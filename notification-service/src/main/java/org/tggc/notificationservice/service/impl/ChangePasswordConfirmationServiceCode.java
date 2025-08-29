@@ -9,10 +9,10 @@ import org.tggc.notificationservice.service.MailSender;
 
 @Slf4j
 @Service
-public class ChangePasswordServiceCode extends AbstractCodeSenderService implements CodeService {
+public class ChangePasswordConfirmationServiceCode extends AbstractCodeSenderService implements CodeService {
     private final RedisTemplate<String, String> redisTemplate;
 
-    public ChangePasswordServiceCode(RedisTemplate<String, String> redisTemplate, MailSender mailSender) {
+    public ChangePasswordConfirmationServiceCode(RedisTemplate<String, String> redisTemplate, MailSender mailSender) {
         super(redisTemplate, mailSender);
         this.redisTemplate = redisTemplate;
     }
@@ -31,6 +31,6 @@ public class ChangePasswordServiceCode extends AbstractCodeSenderService impleme
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.CHANGE_PASSWORD;
+        return NotificationType.CHANGE_PASSWORD_CONFIRMATION;
     }
 }

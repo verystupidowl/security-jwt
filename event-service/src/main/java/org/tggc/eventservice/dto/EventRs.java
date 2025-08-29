@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record EventRs(
+        Long id,
         String title,
         String description,
         LocalDateTime eventDate,

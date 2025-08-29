@@ -19,11 +19,10 @@ public class StartEventSender extends AbstractSender {
     }
 
     @Override
-    protected NotificationRq.NotificationRqBuilder getNotificationRqBuilder(String email, Event event) {
+    protected NotificationRq.NotificationRqBuilder getNotificationRqBuilder(Event event) {
         String text = "Начинается событие: " + event.getTitle();
         String subject = "Начало события";
         return NotificationRq.builder()
-                .to(email)
                 .text(text)
                 .subject(subject);
     }

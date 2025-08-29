@@ -1,8 +1,11 @@
 package org.tggc.authenticationservice.exception;
 
-public class UsernameNotFoundException extends RuntimeException {
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.tggc.authenticationservice.exception.message.ExceptionMessage.USER_NOT_FOUND;
 
-    public UsernameNotFoundException(String message) {
-        super(message);
+public class UsernameNotFoundException extends GlobalException {
+
+    public UsernameNotFoundException(String email) {
+        super(USER_NOT_FOUND, UNAUTHORIZED, email);
     }
 }

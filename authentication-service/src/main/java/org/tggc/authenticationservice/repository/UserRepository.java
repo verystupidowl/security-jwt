@@ -1,13 +1,12 @@
 package org.tggc.authenticationservice.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import org.tggc.authenticationservice.model.User;
-
-import java.util.Optional;
+import reactor.core.publisher.Mono;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends ReactiveCrudRepository<User, Long> {
 
-    Optional<User> findByEmail(String email);
+    Mono<User> findByEmail(String email);
 }

@@ -12,12 +12,13 @@ public abstract class AbstractSender implements Sender {
 
     @Override
     public void send(String email, Event event, NotificationType type) {
-        NotificationRq notificationRq = getNotificationRqBuilder(email, event)
+        NotificationRq notificationRq = getNotificationRqBuilder(event)
                 .type(type)
+                .to(email)
                 .build();
 
         kafkaTemplate.send("simple-notification", notificationRq);
     }
 
-    protected abstract NotificationRq.NotificationRqBuilder getNotificationRqBuilder(String email, Event event);
+    protected abstract NotificationRq.NotificationRqBuilder getNotificationRqBuilder(Event event);
 }

@@ -17,6 +17,9 @@ public class FeignExceptionHandler {
     @ExceptionHandler(FeignErrorException.class)
     @SneakyThrows
     public ResponseEntity<ErrorRs> handleFeignClientException(FeignErrorException e) {
-        return new ResponseEntity<>(objectMapper.readValue(e.getBody(), ErrorRs.class), e.getHttpStatus());
+        var rs = objectMapper.readValue(e.getBody(), ErrorRs.class);
+        return ResponseEntity
+                .status(e.getHttpStatus())
+                .body(rs);
     }
 }

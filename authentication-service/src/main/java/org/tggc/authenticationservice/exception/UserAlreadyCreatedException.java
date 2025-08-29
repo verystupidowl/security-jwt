@@ -1,9 +1,10 @@
 package org.tggc.authenticationservice.exception;
 
+import static org.tggc.authenticationservice.exception.message.ExceptionMessage.USER_ALREADY_CREATED;
+
 public class UserAlreadyCreatedException extends BadRequestException {
-    private static final String MESSAGE = "User with email %s already exists";
 
     public UserAlreadyCreatedException(String email) {
-        super(String.format(MESSAGE, email));
+        super(USER_ALREADY_CREATED, email);
     }
 }
