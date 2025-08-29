@@ -26,12 +26,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorRs> handleException() {
+    public ResponseEntity<ErrorRs> handleException(Exception e) {
         var body = new ErrorRs(
                 INTERNAL_SERVER_ERROR,
                 "Error",
                 LocalDateTime.now()
         );
+
+        log.error("Exception: ", e);
 
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(body);
     }

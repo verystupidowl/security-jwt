@@ -99,10 +99,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Mono<Void> sendCode(SendCodeRq dto) {
-        return Mono.fromRunnable(() -> {
-            Sender sender = senderFactory.getSender(dto.type());
-            sender.send(dto.email(), dto.type());
-        });
+        Sender sender = senderFactory.getSender(dto.type());
+        return sender.send(dto.email(), dto.type());
     }
 
     @Override
@@ -119,9 +117,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     return userRepository.save(user)
                             .then(Mono.fromRunnable(() -> codeApi.deleteCode(dto.email(), NotificationType.CHANGE_PASSWORD_CONFIRMATION))
                                     .subscribeOn(Schedulers.boundedElastic()))
-                            .then(Mono.fromRunnable(() -> {
+                            .then(Mono.defer(() -> {
                                 Sender sender = senderFactory.getSender(NotificationType.CHANGED_PASSWORD);
-                                sender.send(dto.email(), NotificationType.CHANGED_PASSWORD);
+                                return sender.send(dto.email(), NotificationType.CHANGED_PASSWORD);
                             }));
                 });
     }

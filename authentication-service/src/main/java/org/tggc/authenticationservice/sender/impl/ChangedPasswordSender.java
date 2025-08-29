@@ -1,16 +1,16 @@
 package org.tggc.authenticationservice.sender.impl;
 
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.tggc.notificationapi.dto.NotificationRq;
 import org.tggc.notificationapi.dto.NotificationType;
+import reactor.kafka.sender.KafkaSender;
 
 @Service
 public class ChangedPasswordSender extends AbstractSender {
 
 
-    public ChangedPasswordSender(KafkaTemplate<String, Object> kafkaTemplate) {
-        super(kafkaTemplate);
+    public ChangedPasswordSender(KafkaSender<String, Object> kafkaSender) {
+        super(kafkaSender);
     }
 
     @Override

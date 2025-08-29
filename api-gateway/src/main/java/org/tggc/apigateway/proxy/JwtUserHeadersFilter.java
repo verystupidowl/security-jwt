@@ -27,7 +27,7 @@ public class JwtUserHeadersFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         return ReactiveSecurityContextHolder.getContext()
-                .flatMap(context -> {
+                .map(context -> {
                     Authentication auth = context.getAuthentication();
                     ServerHttpRequest mutatedRequest = exchange.getRequest().mutate()
                             .header("X-User-Name", auth.getName())
@@ -35,13 +35,12 @@ public class JwtUserHeadersFilter implements GlobalFilter, Ordered {
                             .header("X-User-roles", getRoles(auth.getAuthorities()))
                             .build();
 
-                    ServerWebExchange mutatedExchange = exchange.mutate()
+                    return exchange.mutate()
                             .request(mutatedRequest)
                             .build();
-
-                    return chain.filter(mutatedExchange);
                 })
-                .switchIfEmpty(chain.filter(exchange));
+                .defaultIfEmpty(exchange)
+                .flatMap(chain::filter);
     }
 
     private String getRoles(java.util.Collection<? extends GrantedAuthority> authorities) {

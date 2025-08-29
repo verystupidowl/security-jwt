@@ -1,12 +1,12 @@
 package org.tggc.authenticationservice.sender.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.tggc.authenticationservice.util.CodeGenerator;
 import org.tggc.notificationapi.dto.NotificationRq;
 import org.tggc.notificationapi.dto.NotificationType;
 import org.tggc.notificationapi.dto.ParamDto;
+import reactor.kafka.sender.KafkaSender;
 
 import java.util.List;
 
@@ -14,8 +14,8 @@ import java.util.List;
 @Service
 public class ChangePasswordConfirmationSender extends AbstractSender {
 
-    public ChangePasswordConfirmationSender(KafkaTemplate<String, Object> kafkaTemplate) {
-        super(kafkaTemplate);
+    public ChangePasswordConfirmationSender(KafkaSender<String, Object> kafkaSender) {
+        super(kafkaSender);
     }
 
     @Override
