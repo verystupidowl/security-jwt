@@ -1,55 +1,59 @@
-package org.tggc.eventservice.config.interceptor;
+package org.tggc.eventservice.config.interceptor
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
-import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.tggc.eventservice.aop.annotation.RequiresRoles;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
+import org.springframework.stereotype.Component
+import org.springframework.web.method.HandlerMethod
+import org.springframework.web.servlet.HandlerInterceptor
+import org.tggc.eventservice.aop.annotation.RequiresRoles
 
 @Component
-public class RolesInterceptor implements HandlerInterceptor {
+class RolesInterceptor : HandlerInterceptor {
 
-    @Override
-    public boolean preHandle(@NonNull HttpServletRequest request,
-                             @NonNull HttpServletResponse response,
-                             @NonNull Object handler) throws Exception {
-        if (!(handler instanceof HandlerMethod method)) {
-            return true;
+    @Throws(Exception::class)
+    override fun preHandle(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        handler: Any
+    ): Boolean {
+        if (handler !is HandlerMethod) {
+            return true
         }
 
-        RequiresRoles requiresRoles = method.getMethodAnnotation(RequiresRoles.class);
+        var requiresRoles = handler.getMethodAnnotation(RequiresRoles::class.java)
         if (requiresRoles == null) {
-            requiresRoles = method.getBeanType().getAnnotation(RequiresRoles.class);
+            requiresRoles = handler.beanType.getAnnotation(RequiresRoles::class.java)
         }
 
         if (requiresRoles == null) {
-            return true;
+            return true
         }
 
-        String rolesHeader = request.getHeader("X-User-Roles");
+        val rolesHeader = request.getHeader("X-User-Roles")
         if (rolesHeader == null || rolesHeader.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("User roles not found");
-            return false;
+            response.status = HttpServletResponse.SC_FORBIDDEN
+            response.writer.write("User roles not found")
+            return false
         }
 
-        Set<String> userRoles = new HashSet<>(Arrays.asList(rolesHeader.split(",")));
+        val userRoles = HashSet(
+            listOf(
+                *rolesHeader.split(",".toRegex())
+                    .dropLastWhile { it.isEmpty() }
+                    .toTypedArray())
+        )
 
-        boolean allowed = Arrays.stream(requiresRoles.value())
-                .anyMatch(userRole -> userRoles.contains(userRole.name()));
+        val allowed = requiresRoles.value.any { it.name in userRoles }
+
+        println(userRoles)
+        println(rolesHeader)
 
         if (!allowed) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("Access denied: insufficient role");
-            return false;
+            response.status = HttpServletResponse.SC_FORBIDDEN
+            response.writer.write("Access denied: insufficient role")
+            return false
         }
 
-        return true;
+        return true
     }
 }

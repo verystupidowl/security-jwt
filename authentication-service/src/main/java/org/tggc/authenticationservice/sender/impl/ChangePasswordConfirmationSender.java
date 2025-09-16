@@ -19,16 +19,16 @@ public class ChangePasswordConfirmationSender extends AbstractSender {
     }
 
     @Override
-    public NotificationType getNotificationType() {
-        return NotificationType.CHANGE_PASSWORD_CONFIRMATION;
-    }
-
-    @Override
     protected NotificationRq.NotificationRqBuilder getNotificationDtoBuilder() {
         String code = CodeGenerator.generate();
         return NotificationRq.builder()
                 .subject("Изменение пароля")
                 .text("Ващ код для изменения пароля")
                 .params(List.of(new ParamDto("code", code)));
+    }
+
+    @Override
+    public NotificationType getNotificationType() {
+        return NotificationType.CHANGE_PASSWORD_CONFIRMATION;
     }
 }

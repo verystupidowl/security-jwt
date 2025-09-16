@@ -1,31 +1,36 @@
-package org.tggc.eventservice.specification;
+package org.tggc.eventservice.specification
 
-import lombok.experimental.UtilityClass;
-import org.springframework.data.jpa.domain.Specification;
-import org.tggc.eventservice.model.Event;
-
-import java.time.LocalDateTime;
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Root
+import lombok.experimental.UtilityClass
+import org.springframework.data.jpa.domain.Specification
+import org.tggc.eventservice.model.Event
+import java.time.LocalDateTime
+import java.util.*
 
 @UtilityClass
-public class EventSpecification {
-
-    public static Specification<Event> titleContains(String title) {
-        return (root, query, cb) ->
-                title == null ? null : cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
+object EventSpecification {
+    fun titleContains(title: String?): Specification<Event?> {
+        return Specification { root: Root<Event?>?, _: CriteriaQuery<*>?, cb: CriteriaBuilder? ->
+            if (title == null) null else cb!!.like(
+                cb.lower(root!!["title"]),
+                "%" + title.lowercase(Locale.getDefault()) + "%"
+            )
+        }
     }
 
-    public static Specification<Event> startDateAfter(LocalDateTime date) {
-        return (root, query, cb) ->
-                date == null ? null : cb.greaterThanOrEqualTo(root.get("startDate"), date);
-    }
+    fun startDateAfter(date: LocalDateTime?): Specification<Event?> =
+        Specification { root, _, cb -> date.let { cb.greaterThanOrEqualTo(root["startDate"], it) } }
 
-    public static Specification<Event> endDateBefore(LocalDateTime date) {
-        return (root, query, cb) ->
-                date == null ? null : cb.lessThanOrEqualTo(root.get("endDate"), date);
-    }
+    fun endDateBefore(date: LocalDateTime?): Specification<Event?> =
+        Specification { root, _, cb -> date?.let { cb.lessThan(root["endDate"], it) } }
 
-    public static Specification<Event> createdBy(Long creatorId) {
-        return (root, query, cb) ->
-                creatorId == null ? null : cb.equal(root.get("creatorId"), creatorId);
-    }
+
+    fun createdBy(creatorId: Long?): Specification<Event> =
+        Specification { root, _, cb ->
+            creatorId?.let {
+                cb.equal(root.get<Long>("creatorId"), it)
+            }
+        }
 }

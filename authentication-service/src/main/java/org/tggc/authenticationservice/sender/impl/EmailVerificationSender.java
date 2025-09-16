@@ -17,16 +17,16 @@ public class EmailVerificationSender extends AbstractSender {
     }
 
     @Override
-    public NotificationType getNotificationType() {
-        return NotificationType.EMAIL_CONFIRMATION;
-    }
-
-    @Override
     protected NotificationRq.NotificationRqBuilder getNotificationDtoBuilder() {
         String code = CodeGenerator.generate();
         return NotificationRq.builder()
                 .text("Ваш код проверки для регистрации: " + code)
                 .params(List.of(new ParamDto("code", code)))
                 .subject("Подтверждение почты");
+    }
+
+    @Override
+    public NotificationType getNotificationType() {
+        return NotificationType.EMAIL_CONFIRMATION;
     }
 }

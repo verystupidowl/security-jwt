@@ -1,5 +1,5 @@
-package org.tggc.eventservice.aop;
+package org.tggc.eventservice.aop
 
-public enum Role {
+enum class Role {
     USER, ADMIN, ORGANIZER
 }

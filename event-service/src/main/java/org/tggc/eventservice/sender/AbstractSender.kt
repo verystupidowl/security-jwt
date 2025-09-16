@@ -1,24 +1,22 @@
-package org.tggc.eventservice.sender;
+package org.tggc.eventservice.sender
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.tggc.eventservice.model.Event;
-import org.tggc.notificationapi.dto.NotificationRq;
-import org.tggc.notificationapi.dto.NotificationType;
+import lombok.RequiredArgsConstructor
+import org.springframework.kafka.core.KafkaTemplate
+import org.tggc.eventservice.model.Event
+import org.tggc.notificationapi.dto.NotificationRq
+import org.tggc.notificationapi.dto.NotificationType
 
 @RequiredArgsConstructor
-public abstract class AbstractSender implements Sender {
-    private final KafkaTemplate<String, Object> kafkaTemplate;
+abstract class AbstractSender(private val kafkaTemplate: KafkaTemplate<String, Any>) : Sender {
 
-    @Override
-    public void send(String email, Event event, NotificationType type) {
-        NotificationRq notificationRq = getNotificationRqBuilder(event)
-                .type(type)
-                .to(email)
-                .build();
+    override fun send(email: String?, event: Event?, type: NotificationType?) {
+        val notificationRq = getNotificationRqBuilder(event)!!
+            .type(type)
+            .to(email)
+            .build()
 
-        kafkaTemplate.send("simple-notification", notificationRq);
+        kafkaTemplate.send("simple-notification", notificationRq)
     }
 
-    protected abstract NotificationRq.NotificationRqBuilder getNotificationRqBuilder(Event event);
+    protected abstract fun getNotificationRqBuilder(event: Event?): NotificationRq.NotificationRqBuilder?
 }

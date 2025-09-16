@@ -1,30 +1,29 @@
-package org.tggc.eventservice.service;
+package org.tggc.eventservice.service
 
-import org.tggc.eventservice.dto.EventRq;
-import org.tggc.eventservice.dto.EventRs;
-import org.tggc.userapi.dto.UserDto;
+import org.tggc.eventservice.dto.EventRq
+import org.tggc.eventservice.dto.EventRs
+import org.tggc.userapi.dto.UserDto
+import java.time.LocalDateTime
 
-import java.time.LocalDateTime;
-import java.util.List;
+interface EventService {
+    fun getEventById(eventId: Long): EventRs
 
-public interface EventService {
+    fun getEventsByUser(userId: Long): MutableList<EventRs>
 
-    EventRs getEventById(Long eventId);
+    fun createEvent(rq: EventRq, userId: Long): EventRs
 
-    List<EventRs> getEventsByUser(Long userId);
+    fun joinEvent(eventId: Long, userId: Long)
 
-    EventRs createEvent(EventRq event, Long userId);
+    fun deleteEvent(eventId: Long)
 
-    void joinEvent(Long eventId, Long userId);
+    fun getUsersByEvent(eventId: Long): MutableList<UserDto>
 
-    void deleteEvent(Long eventId);
+    fun leaveEvent(eventId: Long, userId: Long)
 
-    List<UserDto> getUsersByEvent(Long eventId);
-
-    void leaveEvent(Long eventId, Long userId);
-
-    List<EventRs> getEventsByFilter(String title,
-                                    LocalDateTime startDate,
-                                    LocalDateTime endDate,
-                                    Long creatorId);
+    fun getEventsByFilter(
+        title: String?,
+        startDate: LocalDateTime?,
+        endDate: LocalDateTime?,
+        creatorId: Long?
+    ): List<EventRs?>
 }

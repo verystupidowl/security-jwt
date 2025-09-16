@@ -1,16 +1,15 @@
-package org.tggc.eventservice.dto;
+package org.tggc.eventservice.dto
 
-import lombok.Builder;
-
-import java.time.LocalDateTime;
+import lombok.Builder
+import java.time.LocalDateTime
 
 @Builder
-public record EventRs(
-        Long id,
-        String title,
-        String description,
-        LocalDateTime eventDate,
-        String location,
-        LocalDateTime createdAt
-) {
-}
+data class EventRs(
+    val id: Long?,
+    val title: String?,
+    val description: String?,
+    val eventDate: LocalDateTime?,
+    val location: String?,
+    val createdAt: LocalDateTime?,
+    val participants: MutableList<String?>?
+)

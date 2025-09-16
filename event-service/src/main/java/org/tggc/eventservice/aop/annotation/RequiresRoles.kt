@@ -1,14 +1,12 @@
-package org.tggc.eventservice.aop.annotation;
+package org.tggc.eventservice.aop.annotation
 
-import org.tggc.eventservice.aop.Role;
+import org.tggc.eventservice.aop.Role
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Target({ElementType.METHOD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface RequiresRoles {
-    Role[] value();
-}
+@Target(
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER,
+    AnnotationTarget.CLASS
+)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class RequiresRoles(vararg val value: Role)

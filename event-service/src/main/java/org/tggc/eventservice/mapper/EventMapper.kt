@@ -1,16 +1,16 @@
-package org.tggc.eventservice.mapper;
+package org.tggc.eventservice.mapper
 
-import org.mapstruct.Mapper;
-import org.tggc.eventservice.dto.EventRq;
-import org.tggc.eventservice.dto.EventRs;
-import org.tggc.eventservice.model.Event;
+import org.mapstruct.Mapper
+import org.mapstruct.Mapping
+import org.mapstruct.MappingConstants
+import org.tggc.eventservice.dto.EventRq
+import org.tggc.eventservice.dto.EventRs
+import org.tggc.eventservice.model.Event
 
-import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+interface EventMapper {
+    @Mapping(target = "participants", source = "participants.name")
+    fun toEventRs(event: Event?): EventRs
 
-@Mapper(componentModel = SPRING)
-public interface EventMapper {
-
-    EventRs toEventRs(Event event);
-
-    Event toEvent(EventRq eventRq);
+    fun toEvent(eventRq: EventRq?): Event
 }

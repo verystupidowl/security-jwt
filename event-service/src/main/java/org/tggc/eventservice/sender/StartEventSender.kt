@@ -1,29 +1,22 @@
-package org.tggc.eventservice.sender;
+package org.tggc.eventservice.sender
 
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
-import org.tggc.eventservice.model.Event;
-import org.tggc.notificationapi.dto.NotificationRq;
-import org.tggc.notificationapi.dto.NotificationType;
+import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.stereotype.Service
+import org.tggc.eventservice.model.Event
+import org.tggc.notificationapi.dto.NotificationRq
+import org.tggc.notificationapi.dto.NotificationType
 
 @Service
-public class StartEventSender extends AbstractSender {
+class StartEventSender(kafkaTemplate: KafkaTemplate<String, Any>) : AbstractSender(kafkaTemplate) {
 
-    public StartEventSender(KafkaTemplate<String, Object> kafkaTemplate) {
-        super(kafkaTemplate);
-    }
-
-    @Override
-    public NotificationType getNotificationType() {
-        return null;
-    }
-
-    @Override
-    protected NotificationRq.NotificationRqBuilder getNotificationRqBuilder(Event event) {
-        String text = "Начинается событие: " + event.getTitle();
-        String subject = "Начало события";
+    override fun getNotificationRqBuilder(event: Event?): NotificationRq.NotificationRqBuilder? {
+        val text = "Начинается событие: " + event?.title
+        val subject = "Начало события"
         return NotificationRq.builder()
-                .text(text)
-                .subject(subject);
+            .text(text)
+            .subject(subject)
     }
+
+    override val notificationType: NotificationType
+        get() = NotificationType.START_EVENT
 }

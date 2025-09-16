@@ -1,5 +1,5 @@
-package org.tggc.eventservice.model;
+package org.tggc.eventservice.model
 
-public enum EventStatus {
+enum class EventStatus {
     PENDING, APPROVED, REJECTED
 }

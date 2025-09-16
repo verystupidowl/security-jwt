@@ -1,111 +1,112 @@
-package org.tggc.eventservice.service.impl;
+package org.tggc.eventservice.service.impl
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.tggc.eventservice.dto.EventRq;
-import org.tggc.eventservice.dto.EventRs;
-import org.tggc.eventservice.exception.EventNotFoundException;
-import org.tggc.eventservice.mapper.EventMapper;
-import org.tggc.eventservice.model.Event;
-import org.tggc.eventservice.model.EventStatus;
-import org.tggc.eventservice.model.Participant;
-import org.tggc.eventservice.repository.EventRepository;
-import org.tggc.eventservice.repository.ParticipantRepository;
-import org.tggc.eventservice.service.EventService;
-import org.tggc.eventservice.specification.EventSpecification;
-import org.tggc.userapi.api.UserApi;
-import org.tggc.userapi.dto.UserDto;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import lombok.RequiredArgsConstructor
+import org.springframework.data.jpa.domain.Specification
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import org.tggc.eventservice.dto.EventRq
+import org.tggc.eventservice.dto.EventRs
+import org.tggc.eventservice.exception.AlreadyParticipantException
+import org.tggc.eventservice.exception.EventNotFoundException
+import org.tggc.eventservice.mapper.EventMapper
+import org.tggc.eventservice.model.EventStatus
+import org.tggc.eventservice.model.Participant
+import org.tggc.eventservice.repository.EventRepository
+import org.tggc.eventservice.repository.ParticipantRepository
+import org.tggc.eventservice.service.EventService
+import org.tggc.eventservice.specification.EventSpecification
+import org.tggc.userapi.api.UserApi
+import org.tggc.userapi.dto.UserDto
+import java.time.LocalDateTime
 
 @Service
 @RequiredArgsConstructor
-public class EventServiceImpl implements EventService {
-    private final EventRepository eventRepository;
-    private final EventMapper eventMapper;
-    private final ParticipantRepository participantRepository;
-    private final UserApi userApi;
+open class EventServiceImpl(
+    private val eventRepository: EventRepository,
+    private val eventMapper: EventMapper,
+    private val participantRepository: ParticipantRepository,
+    private val userApi: UserApi
+) : EventService {
 
-    @Override
-    public EventRs getEventById(Long eventId) {
+    override fun getEventById(eventId: Long): EventRs {
         return eventRepository.findById(eventId)
-                .map(eventMapper::toEventRs)
-                .orElseThrow(() -> new EventNotFoundException(String.valueOf(eventId)));
+            .map { event -> eventMapper.toEventRs(event) }
+            .orElseThrow { EventNotFoundException(eventId.toString()) }
     }
 
-    @Override
-    public List<EventRs> getEventsByUser(Long userId) {
+    override fun getEventsByUser(userId: Long): MutableList<EventRs> {
         return eventRepository.findByCreatorId(userId).stream()
-                .map(eventMapper::toEventRs)
-                .toList();
+            .map { event -> eventMapper.toEventRs(event) }
+            .toList()
     }
 
-    @Override
-    public EventRs createEvent(EventRq rq, Long userId) {
-        Event event = eventMapper.toEvent(rq);
-        event.setCreatedAt(LocalDateTime.now());
-        event.setCreatorId(userId);
-        event.setUpdatedAt(LocalDateTime.now());
-        return eventMapper.toEventRs(eventRepository.save(event));
+    override fun createEvent(
+        rq: EventRq,
+        userId: Long
+    ): EventRs {
+        val event = eventMapper.toEvent(rq)
+            .apply {
+                this.updatedAt = LocalDateTime.now()
+                this.creatorId = userId
+                this.createdAt = LocalDateTime.now()
+            }
+        return eventMapper.toEventRs(event)
     }
 
-    @Override
     @Transactional
-    public void joinEvent(Long eventId, Long userId) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new EventNotFoundException(String.valueOf(eventId)));
-        event.setUpdatedAt(LocalDateTime.now());
+    override fun joinEvent(eventId: Long, userId: Long) {
+        if (participantRepository.existsByEventIdAndUserId(eventId, userId)) {
+            throw AlreadyParticipantException("User with id: $userId is already joined event $eventId")
+        }
 
-        List<Participant> participants = participantRepository.findByEventId(userId);
-        Participant participant = new Participant();
-        participant.setUserId(userId);
-        participant.setEvent(event);
-        participant.setStatus(EventStatus.PENDING);
-        participant.setJoinedAd(LocalDateTime.now());
-        participants.add(participant);
+        val event = eventRepository.findById(eventId)
+            .orElseThrow { EventNotFoundException(eventId.toString()) }
+        event?.updatedAt = LocalDateTime.now()
 
-        eventRepository.save(event);
-        participantRepository.saveAll(participants);
+        val participant = Participant().apply {
+            this.userId = userId
+            this.event = event
+            this.status = EventStatus.PENDING
+            this.joinedAd = LocalDateTime.now()
+        }
+
+        eventRepository.save(event!!)
+        participantRepository.save(participant)
     }
 
-    @Override
-    public void deleteEvent(Long eventId) {
-        eventRepository.deleteById(eventId);
+    override fun deleteEvent(eventId: Long) {
+        eventRepository.deleteById(eventId)
     }
 
-    @Override
-    public List<UserDto> getUsersByEvent(Long eventId) {
-        List<Long> participantIds = participantRepository.findByEventId(eventId).stream()
-                .map(Participant::getUserId)
-                .toList();
+    override fun getUsersByEvent(eventId: Long): MutableList<UserDto> {
+        val participantIds = participantRepository.findByEventId(eventId)!!.stream()
+            .map { participant -> participant?.userId }
+            .toList()
 
-        return userApi.getUsers(participantIds);
+        return userApi.getUsers(participantIds)
     }
 
-    @Override
-    public void leaveEvent(Long eventId, Long userId) {
-        List<Participant> participants = participantRepository.findByEventId(eventId);
-        participants.removeIf(participant -> userId.equals(participant.getUserId()));
-        participantRepository.saveAll(participants);
+    override fun leaveEvent(eventId: Long, userId: Long) {
+        val participants = participantRepository.findByEventId(eventId)
+        participants?.removeIf { participant -> userId == participant!!.userId }
+        participantRepository.saveAll(participants!!)
     }
 
-    @Override
-    public List<EventRs> getEventsByFilter(String title,
-                                           LocalDateTime startDate,
-                                           LocalDateTime endDate,
-                                           Long creatorId) {
-        Specification<Event> specification = Specification.allOf(
-                EventSpecification.titleContains(title),
-                EventSpecification.createdBy(creatorId),
-                EventSpecification.startDateAfter(startDate),
-                EventSpecification.endDateBefore(endDate)
-        );
+    override fun getEventsByFilter(
+        title: String?,
+        startDate: LocalDateTime?,
+        endDate: LocalDateTime?,
+        creatorId: Long?
+    ): List<EventRs> {
+        val specification = Specification.allOf(
+            EventSpecification.titleContains(title),
+            EventSpecification.createdBy(creatorId),
+            EventSpecification.startDateAfter(startDate),
+            EventSpecification.endDateBefore(endDate)
+        )
 
         return eventRepository.findAll(specification).stream()
-                .map(eventMapper::toEventRs)
-                .toList();
+            .map { event -> eventMapper.toEventRs(event) }
+            .toList()
     }
 }
