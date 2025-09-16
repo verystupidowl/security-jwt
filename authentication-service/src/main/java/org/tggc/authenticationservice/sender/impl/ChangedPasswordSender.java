@@ -8,7 +8,6 @@ import reactor.kafka.sender.KafkaSender;
 @Service
 public class ChangedPasswordSender extends AbstractSender {
 
-
     public ChangedPasswordSender(KafkaSender<String, Object> kafkaSender) {
         super(kafkaSender);
     }

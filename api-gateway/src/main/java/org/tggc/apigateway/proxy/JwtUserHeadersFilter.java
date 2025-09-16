@@ -14,6 +14,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.tggc.apigateway.principal.JwtUserPrincipal;
 import reactor.core.publisher.Mono;
 
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Component
@@ -43,7 +44,7 @@ public class JwtUserHeadersFilter implements GlobalFilter, Ordered {
                 .flatMap(chain::filter);
     }
 
-    private String getRoles(java.util.Collection<? extends GrantedAuthority> authorities) {
+    private String getRoles(Collection<? extends GrantedAuthority> authorities) {
         return authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));

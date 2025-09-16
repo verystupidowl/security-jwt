@@ -1,11 +1,14 @@
 package org.tggc.authenticationservice.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.tggc.authapi.dto.ErrorRs;
 import org.tggc.authenticationservice.exception.GlobalException;
+import org.tggc.authenticationservice.mapper.ErrorMapper;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +16,14 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @RestControllerAdvice
 @Slf4j
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+    private final ErrorMapper errorMapper;
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorRs> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest().body(errorMapper.toDto(e));
+    }
 
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<ErrorRs> handleException(GlobalException ex) {

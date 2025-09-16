@@ -9,13 +9,16 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import org.tggc.apigateway.principal.JwtUserPrincipal;
 import org.tggc.apigateway.service.JwtAuthenticationManager;
+import org.tggc.apigateway.service.JwtService;
 import reactor.core.publisher.Mono;
 
 @Component
 @RequiredArgsConstructor
 public class JwtSecurityContextRepository implements ServerSecurityContextRepository {
     private final JwtAuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
@@ -27,7 +30,11 @@ public class JwtSecurityContextRepository implements ServerSecurityContextReposi
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
-            Authentication auth = new UsernamePasswordAuthenticationToken(null, token);
+            JwtUserPrincipal principal = new JwtUserPrincipal(
+                    jwtService.extractId(token),
+                    jwtService.extractEmail(token)
+            );
+            Authentication auth = new UsernamePasswordAuthenticationToken(principal, token);
             return authenticationManager.authenticate(auth)
                     .map(SecurityContextImpl::new);
         }

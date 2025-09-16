@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
+import static org.mapstruct.ReportingPolicy.IGNORE;
 
-@Mapper(componentModel = SPRING)
+@Mapper(componentModel = SPRING, unmappedSourcePolicy = IGNORE)
 public interface ErrorMapper extends Mappable<MethodArgumentNotValidException, ErrorRs> {
 
     @Mapping(target = "status", expression = "java(org.springframework.http.HttpStatus.BAD_REQUEST)")
