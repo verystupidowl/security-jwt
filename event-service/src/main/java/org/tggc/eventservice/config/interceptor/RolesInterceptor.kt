@@ -10,7 +10,6 @@ import org.tggc.eventservice.aop.annotation.RequiresRoles
 @Component
 class RolesInterceptor : HandlerInterceptor {
 
-    @Throws(Exception::class)
     override fun preHandle(
         request: HttpServletRequest,
         response: HttpServletResponse,
