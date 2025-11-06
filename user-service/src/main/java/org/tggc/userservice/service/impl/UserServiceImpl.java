@@ -1,8 +1,8 @@
 package org.tggc.userservice.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tggc.userapi.dto.UserDto;
 import org.tggc.userservice.exception.UserBlockedException;
 import org.tggc.userservice.exception.UserNotFoundException;
@@ -20,6 +20,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public UserDto getUserById(long userId) {
         return userRepository.findById(userId)
                 .map(user -> {
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<UserDto> getUsersByIds(List<Long> ids) {
         return userRepository.findAllById(ids).stream()
                 .map(userMapper::userToUserDto)

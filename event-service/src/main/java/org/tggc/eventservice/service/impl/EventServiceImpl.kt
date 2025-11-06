@@ -28,18 +28,21 @@ open class EventServiceImpl(
     private val userApi: UserApi
 ) : EventService {
 
+    @Transactional(readOnly = true)
     override fun getEventById(eventId: Long): EventRs {
         return eventRepository.findById(eventId)
             .map { event -> eventMapper.toEventRs(event) }
             .orElseThrow { EventNotFoundException(eventId.toString()) }
     }
 
+    @Transactional(readOnly = true)
     override fun getEventsByUser(userId: Long): MutableList<EventRs> {
         return eventRepository.findByCreatorId(userId).stream()
             .map { event -> eventMapper.toEventRs(event) }
             .toList()
     }
 
+    @Transactional
     override fun createEvent(
         rq: EventRq,
         userId: Long
@@ -74,10 +77,12 @@ open class EventServiceImpl(
         participantRepository.save(participant)
     }
 
+    @Transactional
     override fun deleteEvent(eventId: Long) {
         eventRepository.deleteById(eventId)
     }
 
+    @Transactional(readOnly = true)
     override fun getUsersByEvent(eventId: Long): MutableList<UserDto> {
         val participantIds = participantRepository.findByEventId(eventId)!!.stream()
             .map { participant -> participant?.userId }
@@ -86,12 +91,14 @@ open class EventServiceImpl(
         return userApi.getUsers(participantIds)
     }
 
+    @Transactional
     override fun leaveEvent(eventId: Long, userId: Long) {
         val participants = participantRepository.findByEventId(eventId)
         participants?.removeIf { participant -> userId == participant!!.userId }
         participantRepository.saveAll(participants!!)
     }
 
+    @Transactional(readOnly = true)
     override fun getEventsByFilter(
         title: String?,
         startDate: LocalDateTime?,
