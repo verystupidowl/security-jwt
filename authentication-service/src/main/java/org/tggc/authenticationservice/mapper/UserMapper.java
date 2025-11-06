@@ -4,12 +4,12 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.tggc.authapi.dto.RegisterRq;
-import org.tggc.authenticationservice.model.Role;
 import org.tggc.authenticationservice.model.User;
 import org.tggc.authenticationservice.service.PasswordService;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 import static org.mapstruct.ReportingPolicy.IGNORE;
+import static org.tggc.authenticationservice.model.Role.USER;
 
 @Mapper(componentModel = SPRING, unmappedSourcePolicy = IGNORE, unmappedTargetPolicy = IGNORE)
 public interface UserMapper extends Mappable<User, RegisterRq> {
@@ -30,6 +30,6 @@ public interface UserMapper extends Mappable<User, RegisterRq> {
     }
 
     default String mapRole() {
-        return Role.USER.name();
+        return USER.name();
     }
 }

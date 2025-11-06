@@ -1,7 +1,6 @@
 package org.tggc.userservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +29,8 @@ public class UserController implements UserApi {
 
     @PostMapping("/block/{userId}")
     @RequiresRoles({Role.ADMIN})
-    public ResponseEntity<Void> blockUser(@PathVariable("userId") Long userId, @RequestParam("block") Boolean block) {
-        userService.blockUser(userId, block);
-        return ResponseEntity.ok().build();
+    public UserDto blockUser(@PathVariable("userId") Long userId, @RequestParam("block") Boolean block) {
+        return userService.blockUser(userId, block);
     }
 
     @Override

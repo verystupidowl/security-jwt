@@ -5,7 +5,6 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
@@ -17,12 +16,15 @@ import reactor.core.publisher.Mono;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import static org.springframework.security.config.annotation.rsocket.PayloadInterceptorOrder.AUTHENTICATION;
+
 @Component
 @RequiredArgsConstructor
 public class JwtUserHeadersFilter implements GlobalFilter, Ordered {
+
     @Override
     public int getOrder() {
-        return SecurityWebFiltersOrder.AUTHENTICATION.getOrder() + 1;
+        return AUTHENTICATION.getOrder() + 1;
     }
 
     @Override

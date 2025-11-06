@@ -9,6 +9,8 @@ import reactor.kafka.sender.KafkaSender;
 
 import java.util.List;
 
+import static org.tggc.notificationapi.dto.NotificationType.EMAIL_CONFIRMATION;
+
 @Service
 public class EmailVerificationSender extends AbstractSender {
 
@@ -27,6 +29,6 @@ public class EmailVerificationSender extends AbstractSender {
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.EMAIL_CONFIRMATION;
+        return EMAIL_CONFIRMATION;
     }
 }

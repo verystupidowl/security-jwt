@@ -9,6 +9,8 @@ import reactor.kafka.sender.KafkaSender;
 
 import java.util.List;
 
+import static org.tggc.notificationapi.dto.NotificationType.TWO_FACTOR;
+
 @Service
 public class TwoFactorSender extends AbstractSender {
 
@@ -28,6 +30,6 @@ public class TwoFactorSender extends AbstractSender {
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.TWO_FACTOR;
+        return TWO_FACTOR;
     }
 }

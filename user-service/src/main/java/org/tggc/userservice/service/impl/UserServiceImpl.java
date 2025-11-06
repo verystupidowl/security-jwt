@@ -7,7 +7,6 @@ import org.tggc.userapi.dto.UserDto;
 import org.tggc.userservice.exception.UserBlockedException;
 import org.tggc.userservice.exception.UserNotFoundException;
 import org.tggc.userservice.mapper.UserMapper;
-import org.tggc.userservice.model.User;
 import org.tggc.userservice.repository.UserRepository;
 import org.tggc.userservice.service.UserService;
 
@@ -42,11 +41,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void blockUser(Long userId, Boolean block) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("user with id not found " + userId));
-
-        user.setBlocked(block);
-        userRepository.save(user);
+    public UserDto blockUser(Long userId, Boolean block) {
+        return userRepository.findById(userId)
+                .map(user -> {
+                    user.setBlocked(block);
+                    return userMapper.toDto(user);
+                })
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 }

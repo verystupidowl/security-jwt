@@ -9,6 +9,7 @@ import org.tggc.eventservice.dto.EventRs
 import org.tggc.eventservice.exception.AlreadyParticipantException
 import org.tggc.eventservice.exception.EventNotFoundException
 import org.tggc.eventservice.mapper.EventMapper
+import org.tggc.eventservice.model.Event
 import org.tggc.eventservice.model.EventStatus
 import org.tggc.eventservice.model.Participant
 import org.tggc.eventservice.repository.EventRepository
@@ -62,7 +63,7 @@ open class EventServiceImpl(
             throw AlreadyParticipantException("User with id: $userId is already joined event $eventId")
         }
 
-        val event = eventRepository.findById(eventId)
+        val event: Event? = eventRepository.findById(eventId)
             .orElseThrow { EventNotFoundException(eventId.toString()) }
         event?.updatedAt = LocalDateTime.now()
 

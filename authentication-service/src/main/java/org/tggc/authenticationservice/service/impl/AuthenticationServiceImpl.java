@@ -24,11 +24,13 @@ import org.tggc.authenticationservice.service.validator.impl.PasswordValidator;
 import org.tggc.authenticationservice.service.validator.impl.UserValidator;
 import org.tggc.authenticationservice.service.validator.rq.ValidationRq;
 import org.tggc.notificationapi.api.CodeApi;
-import org.tggc.notificationapi.dto.NotificationType;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
+
+import static org.tggc.notificationapi.dto.NotificationType.CHANGED_PASSWORD;
+import static org.tggc.notificationapi.dto.NotificationType.CHANGE_PASSWORD_CONFIRMATION;
 
 @Slf4j
 @Service
@@ -87,14 +89,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         })
                         .then(Mono.fromRunnable(() -> codeApi.deleteCode(
                                 dto.email(),
-                                NotificationType.CHANGE_PASSWORD_CONFIRMATION
+                                CHANGE_PASSWORD_CONFIRMATION
                         )).subscribeOn(Schedulers.boundedElastic()))
                         .then(sendChangedPasswordNotification(dto.email()))
                 );
     }
 
     private Mono<Void> sendChangedPasswordNotification(String email) {
-        return senderFactory.getSender(NotificationType.CHANGED_PASSWORD)
-                .send(email, NotificationType.CHANGED_PASSWORD);
+        return senderFactory.getSender(CHANGED_PASSWORD)
+                .send(email, CHANGED_PASSWORD);
     }
 }

@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +13,8 @@ import java.security.Key;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Function;
+
+import static io.jsonwebtoken.SignatureAlgorithm.HS256;
 
 @Service
 public class JwtService {
@@ -27,7 +28,7 @@ public class JwtService {
                 .claim("userId", userId)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + getExpirationMs()))
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .signWith(getSignInKey(), HS256)
                 .compact();
     }
 

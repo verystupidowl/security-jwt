@@ -10,5 +10,5 @@ public interface UserService {
 
     List<UserDto> getUsersByIds(List<Long> ids);
 
-    void blockUser(Long userId, Boolean block);
+    UserDto blockUser(Long userId, Boolean block);
 }
