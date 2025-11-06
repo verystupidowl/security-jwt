@@ -11,6 +11,7 @@ import java.util.*
 
 @UtilityClass
 object EventSpecification {
+
     fun titleContains(title: String?): Specification<Event?> {
         return Specification { root: Root<Event?>?, _: CriteriaQuery<*>?, cb: CriteriaBuilder? ->
             if (title == null) null else cb!!.like(
@@ -25,7 +26,6 @@ object EventSpecification {
 
     fun endDateBefore(date: LocalDateTime?): Specification<Event?> =
         Specification { root, _, cb -> date?.let { cb.lessThan(root["endDate"], it) } }
-
 
     fun createdBy(creatorId: Long?): Specification<Event> =
         Specification { root, _, cb ->

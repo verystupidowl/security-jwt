@@ -23,7 +23,7 @@ public class ChangePasswordConfirmationSender extends AbstractSender {
         String code = CodeGenerator.generate();
         return NotificationRq.builder()
                 .subject("Изменение пароля")
-                .text("Ващ код для изменения пароля")
+                .text("Ваш код для изменения пароля")
                 .params(List.of(new ParamDto("code", code)));
     }
 

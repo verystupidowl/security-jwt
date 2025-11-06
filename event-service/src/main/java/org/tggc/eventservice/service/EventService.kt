@@ -6,6 +6,7 @@ import org.tggc.userapi.dto.UserDto
 import java.time.LocalDateTime
 
 interface EventService {
+
     fun getEventById(eventId: Long): EventRs
 
     fun getEventsByUser(userId: Long): MutableList<EventRs>

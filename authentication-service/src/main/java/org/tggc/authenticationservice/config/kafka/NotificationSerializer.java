@@ -6,7 +6,6 @@ import org.apache.kafka.common.serialization.Serializer;
 import org.tggc.notificationapi.dto.NotificationRq;
 
 public class NotificationSerializer implements Serializer<NotificationRq> {
-
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
