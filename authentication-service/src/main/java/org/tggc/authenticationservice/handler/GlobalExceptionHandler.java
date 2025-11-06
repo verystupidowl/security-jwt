@@ -22,7 +22,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorRs> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        return ResponseEntity.badRequest().body(errorMapper.toDto(e));
+        var rs = errorMapper.toDto(e);
+        return ResponseEntity.badRequest().body(rs);
     }
 
     @ExceptionHandler(GlobalException.class)

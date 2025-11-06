@@ -1,7 +1,6 @@
 package org.tggc.apigateway.repository;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -13,6 +12,8 @@ import org.tggc.apigateway.principal.JwtUserPrincipal;
 import org.tggc.apigateway.service.JwtAuthenticationManager;
 import org.tggc.apigateway.service.JwtService;
 import reactor.core.publisher.Mono;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class JwtSecurityContextRepository implements ServerSecurityContextReposi
 
     @Override
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
-        String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        String authHeader = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             JwtUserPrincipal principal = new JwtUserPrincipal(

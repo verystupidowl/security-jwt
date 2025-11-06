@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 @Configuration
 @Slf4j
 public class FeignConfig {
@@ -30,7 +32,7 @@ public class FeignConfig {
             } catch (IOException e) {
                 log.error(e.getMessage());
                 return new FeignErrorException(
-                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        INTERNAL_SERVER_ERROR,
                         e.getMessage()
                 );
             }

@@ -1,10 +1,10 @@
 package org.tggc.authenticationservice.exception;
 
-import org.tggc.authenticationservice.exception.message.ExceptionMessage;
+import static org.tggc.authenticationservice.exception.message.ExceptionMessage.USER_NOT_FOUND;
 
 public class UserNotFoundException extends BadRequestException {
 
     public UserNotFoundException(String email) {
-        super(ExceptionMessage.USER_NOT_FOUND, email);
+        super(USER_NOT_FOUND, email);
     }
 }

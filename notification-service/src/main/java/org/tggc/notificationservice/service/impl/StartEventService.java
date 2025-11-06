@@ -7,6 +7,8 @@ import org.tggc.notificationservice.dto.NotificationRq;
 import org.tggc.notificationservice.service.MailSender;
 import org.tggc.notificationservice.service.SenderService;
 
+import static org.tggc.notificationapi.dto.NotificationType.START_EVENT;
+
 @Service
 @RequiredArgsConstructor
 public class StartEventService implements SenderService {
@@ -19,6 +21,6 @@ public class StartEventService implements SenderService {
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.START_EVENT;
+        return START_EVENT;
     }
 }

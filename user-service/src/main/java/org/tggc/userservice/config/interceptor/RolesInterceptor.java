@@ -12,6 +12,8 @@ import org.tggc.userservice.aop.annotation.RequiresRoles;
 import java.util.Arrays;
 import java.util.Set;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+
 @Component
 public class RolesInterceptor implements HandlerInterceptor {
 
@@ -34,7 +36,7 @@ public class RolesInterceptor implements HandlerInterceptor {
 
         String rolesFromHeader = request.getHeader("X-User-Roles");
         if (StringUtils.isEmpty(rolesFromHeader)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(SC_FORBIDDEN);
             response.getWriter().write("User roles not found");
             return false;
         }
@@ -45,7 +47,7 @@ public class RolesInterceptor implements HandlerInterceptor {
                 .anyMatch(userRole -> userRoles.contains(userRole.name()));
 
         if (!allowed) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(SC_FORBIDDEN);
             response.getWriter().write("Access denied!");
             return false;
         }

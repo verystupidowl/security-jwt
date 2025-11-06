@@ -8,11 +8,6 @@ import org.tggc.authenticationservice.exception.message.ExceptionMessage;
 public class GlobalException extends RuntimeException {
     private final HttpStatus httpStatus;
 
-    public GlobalException(String message, HttpStatus httpStatus, Throwable cause) {
-        super(message, cause);
-        this.httpStatus = httpStatus;
-    }
-
     public GlobalException(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;

@@ -6,9 +6,10 @@ import org.tggc.authenticationservice.exception.IncorrectCodeException;
 import org.tggc.authenticationservice.service.validator.Validator;
 import org.tggc.authenticationservice.service.validator.rq.ValidationRq;
 import org.tggc.notificationapi.api.CodeApi;
-import org.tggc.notificationapi.dto.NotificationType;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+
+import static org.tggc.notificationapi.dto.NotificationType.EMAIL_CONFIRMATION;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +30,7 @@ public class EmailCodeValidator implements Validator<ValidationRq<String, String
     }
 
     private Mono<String> getCode(String email) {
-        return Mono.fromCallable(() -> codeApi.getCode(email, NotificationType.EMAIL_CONFIRMATION))
+        return Mono.fromCallable(() -> codeApi.getCode(email, EMAIL_CONFIRMATION))
                 .subscribeOn(Schedulers.boundedElastic());
     }
 }

@@ -6,6 +6,8 @@ import org.tggc.notificationapi.dto.NotificationType;
 import org.tggc.notificationservice.service.CodeService;
 import org.tggc.notificationservice.service.MailSender;
 
+import static org.tggc.notificationapi.dto.NotificationType.TWO_FACTOR;
+
 @Service
 public class TwoFactorService extends AbstractCodeSenderService implements CodeService {
     private final RedisTemplate<String, String> redisTemplate;
@@ -27,6 +29,6 @@ public class TwoFactorService extends AbstractCodeSenderService implements CodeS
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.TWO_FACTOR;
+        return TWO_FACTOR;
     }
 }

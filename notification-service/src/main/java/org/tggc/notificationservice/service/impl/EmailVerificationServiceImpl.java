@@ -6,6 +6,8 @@ import org.tggc.notificationapi.dto.NotificationType;
 import org.tggc.notificationservice.service.CodeService;
 import org.tggc.notificationservice.service.MailSender;
 
+import static org.tggc.notificationapi.dto.NotificationType.EMAIL_CONFIRMATION;
+
 @Service
 public class EmailVerificationServiceImpl extends AbstractCodeSenderService implements CodeService {
     private final RedisTemplate<String, String> redisTemplate;
@@ -27,6 +29,6 @@ public class EmailVerificationServiceImpl extends AbstractCodeSenderService impl
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.EMAIL_CONFIRMATION;
+        return EMAIL_CONFIRMATION;
     }
 }

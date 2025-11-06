@@ -10,6 +10,8 @@ import reactor.kafka.sender.KafkaSender;
 
 import java.util.List;
 
+import static org.tggc.notificationapi.dto.NotificationType.CHANGE_PASSWORD_CONFIRMATION;
+
 @Slf4j
 @Service
 public class ChangePasswordConfirmationSender extends AbstractSender {
@@ -29,6 +31,6 @@ public class ChangePasswordConfirmationSender extends AbstractSender {
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.CHANGE_PASSWORD_CONFIRMATION;
+        return CHANGE_PASSWORD_CONFIRMATION;
     }
 }

@@ -7,6 +7,8 @@ import org.tggc.notificationapi.dto.NotificationType;
 import org.tggc.notificationservice.service.CodeService;
 import org.tggc.notificationservice.service.MailSender;
 
+import static org.tggc.notificationapi.dto.NotificationType.CHANGE_PASSWORD_CONFIRMATION;
+
 @Slf4j
 @Service
 public class ChangePasswordConfirmationServiceCode extends AbstractCodeSenderService implements CodeService {
@@ -31,6 +33,6 @@ public class ChangePasswordConfirmationServiceCode extends AbstractCodeSenderSer
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.CHANGE_PASSWORD_CONFIRMATION;
+        return CHANGE_PASSWORD_CONFIRMATION;
     }
 }

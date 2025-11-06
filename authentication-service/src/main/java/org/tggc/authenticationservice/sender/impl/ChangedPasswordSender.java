@@ -5,6 +5,8 @@ import org.tggc.notificationapi.dto.NotificationRq;
 import org.tggc.notificationapi.dto.NotificationType;
 import reactor.kafka.sender.KafkaSender;
 
+import static org.tggc.notificationapi.dto.NotificationType.CHANGED_PASSWORD;
+
 @Service
 public class ChangedPasswordSender extends AbstractSender {
 
@@ -21,6 +23,6 @@ public class ChangedPasswordSender extends AbstractSender {
 
     @Override
     public NotificationType getNotificationType() {
-        return NotificationType.CHANGED_PASSWORD;
+        return CHANGED_PASSWORD;
     }
 }
