@@ -27,6 +27,8 @@ public abstract class AbstractSender implements Sender {
                 .type(type)
                 .build();
 
+        log.info("sending email: {}", notificationDto.toString());
+
         SenderRecord<String, Object, String> senderRecord = SenderRecord.create(
                 new ProducerRecord<>(topic, "simple-notification", notificationDto),
                 email

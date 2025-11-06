@@ -7,15 +7,12 @@ import org.tggc.authapi.dto.RegisterRq;
 import org.tggc.authenticationservice.model.Role;
 import org.tggc.authenticationservice.model.User;
 import org.tggc.authenticationservice.service.PasswordService;
-import org.tggc.userapi.dto.UserDto;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 import static org.mapstruct.ReportingPolicy.IGNORE;
 
 @Mapper(componentModel = SPRING, unmappedSourcePolicy = IGNORE, unmappedTargetPolicy = IGNORE)
 public interface UserMapper extends Mappable<User, RegisterRq> {
-
-    UserDto toApiDto(User user);
 
     @Mapping(target = "firstname", source = "firstname")
     @Mapping(target = "lastname", source = "lastname")

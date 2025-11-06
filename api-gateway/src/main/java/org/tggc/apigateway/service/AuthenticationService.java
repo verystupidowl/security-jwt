@@ -23,7 +23,8 @@ public class AuthenticationService {
                     String token = jwtService.generateToken(
                             authenticationRs.email(),
                             authenticationRs.roles(),
-                            authenticationRs.userId());
+                            authenticationRs.userId()
+                    );
                     return new TokenRs(token);
                 });
 

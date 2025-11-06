@@ -52,7 +52,7 @@ public class JwtUserHeadersFilter implements GlobalFilter, Ordered {
 
     private String getId(Authentication auth) {
         if (auth.getPrincipal() instanceof JwtUserPrincipal principal) {
-            return String.valueOf(principal.getId());
+            return String.valueOf(principal.id());
         }
         return null;
     }

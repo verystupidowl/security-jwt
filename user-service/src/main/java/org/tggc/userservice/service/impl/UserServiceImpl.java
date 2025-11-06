@@ -25,9 +25,9 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId)
                 .map(user -> {
                     if (Boolean.TRUE.equals(user.getBlocked())) {
-                        throw new UserBlockedException("User blocked");
+                        throw new UserBlockedException();
                     }
-                    return userMapper.userToUserDto(user);
+                    return userMapper.toDto(user);
                 })
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public List<UserDto> getUsersByIds(List<Long> ids) {
         return userRepository.findAllById(ids).stream()
-                .map(userMapper::userToUserDto)
+                .map(userMapper::toDto)
                 .toList();
     }
 
