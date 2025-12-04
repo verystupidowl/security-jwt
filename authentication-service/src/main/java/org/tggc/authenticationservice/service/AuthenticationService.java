@@ -16,4 +16,6 @@ public interface AuthenticationService {
     Mono<Void> sendCode(SendCodeRq email);
 
     Mono<Void> changePassword(ChangePasswordRq dto);
+
+    Mono<Void> blockUser(Long userId, Boolean block, Long id);
 }

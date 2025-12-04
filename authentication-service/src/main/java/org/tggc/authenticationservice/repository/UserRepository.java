@@ -2,11 +2,11 @@ package org.tggc.authenticationservice.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
-import org.tggc.authenticationservice.model.User;
+import org.tggc.authenticationservice.model.UserCredentials;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface UserRepository extends ReactiveCrudRepository<User, Long> {
+public interface UserRepository extends ReactiveCrudRepository<UserCredentials, Long> {
 
-    Mono<User> findByEmail(String email);
+    Mono<UserCredentials> findByEmail(String email);
 }

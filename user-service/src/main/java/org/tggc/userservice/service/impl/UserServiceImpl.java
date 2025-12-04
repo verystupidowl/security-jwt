@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tggc.userapi.dto.UserDto;
-import org.tggc.userservice.exception.UserBlockedException;
 import org.tggc.userservice.exception.UserNotFoundException;
 import org.tggc.userservice.mapper.UserMapper;
 import org.tggc.userservice.repository.UserRepository;
 import org.tggc.userservice.service.UserService;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -20,33 +21,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDto getUserById(long userId) {
+    public Mono<UserDto> getUserById(long userId) {
         return userRepository.findById(userId)
-                .map(user -> {
-                    if (Boolean.TRUE.equals(user.getBlocked())) {
-                        throw new UserBlockedException();
-                    }
-                    return userMapper.toDto(user);
-                })
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .flatMap(user -> Mono.just(userMapper.toDto(user)))
+                .cast(UserDto.class)
+                .switchIfEmpty(Mono.error(new UserNotFoundException("User not found")));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDto> getUsersByIds(List<Long> ids) {
-        return userRepository.findAllById(ids).stream()
-                .map(userMapper::toDto)
-                .toList();
+    public Flux<UserDto> getUsersByIds(List<Long> ids) {
+        return userRepository.findAllById(ids)
+                .map(userMapper::toDto);
     }
 
     @Override
-    @Transactional
-    public UserDto blockUser(Long userId, Boolean block) {
-        return userRepository.findById(userId)
-                .map(user -> {
-                    user.setBlocked(block);
-                    return userMapper.toDto(user);
-                })
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+    public Mono<UserDto> getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(userMapper::toDto);
     }
 }
