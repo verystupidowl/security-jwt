@@ -9,7 +9,9 @@ public enum ExceptionMessage {
     INCORRECT_PASSWORD("Incorrect password"),
     PASSWORDS_NOT_MATCH("Passwords not match"),
     USER_ALREADY_CREATED("User with email %s already exists"),
-    USER_BLOCKED("User blocked");
+    USER_BLOCKED("User blocked"),
+    USER_HAS_NO_ROLE("User with email %s has no role"),
+    ;
 
     private final String message;
 

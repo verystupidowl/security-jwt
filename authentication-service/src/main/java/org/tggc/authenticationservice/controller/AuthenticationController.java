@@ -2,9 +2,12 @@ package org.tggc.authenticationservice.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.tggc.authapi.api.AuthApi;
 import org.tggc.authapi.dto.AuthenticationRq;
@@ -39,5 +42,12 @@ public class AuthenticationController implements AuthApi {
     @PostMapping("/change-password")
     public Mono<Void> changePassword(@Valid @RequestBody ChangePasswordRq dto) {
         return authenticationService.changePassword(dto);
+    }
+
+    @PostMapping("/block/{userId}")
+    public Mono<Void> blockUser(@PathVariable("userId") Long userId,
+                                @RequestParam("block") Boolean block,
+                                @RequestHeader("X-UserId") Long id) {
+        return authenticationService.blockUser(userId, block, id);
     }
 }

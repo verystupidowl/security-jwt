@@ -10,10 +10,10 @@ import org.tggc.authapi.dto.RegisterRq;
 import org.tggc.authenticationservice.dto.request.ChangePasswordRq;
 import org.tggc.authenticationservice.dto.request.SendCodeRq;
 import org.tggc.authenticationservice.exception.UserAlreadyCreatedException;
+import org.tggc.authenticationservice.exception.UserForbiddenException;
 import org.tggc.authenticationservice.exception.UserNotFoundException;
-import org.tggc.authenticationservice.exception.UsernameNotFoundException;
 import org.tggc.authenticationservice.mapper.AuthMapper;
-import org.tggc.authenticationservice.mapper.UserMapper;
+import org.tggc.authenticationservice.model.Role;
 import org.tggc.authenticationservice.repository.UserRepository;
 import org.tggc.authenticationservice.sender.Sender;
 import org.tggc.authenticationservice.sender.SenderFactory;
@@ -24,10 +24,12 @@ import org.tggc.authenticationservice.service.validator.impl.PasswordValidator;
 import org.tggc.authenticationservice.service.validator.impl.UserValidator;
 import org.tggc.authenticationservice.service.validator.rq.ValidationRq;
 import org.tggc.notificationapi.api.CodeApi;
+import org.tggc.userapi.api.AuthenticationApi;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 
 import static org.tggc.notificationapi.dto.NotificationType.CHANGED_PASSWORD;
 import static org.tggc.notificationapi.dto.NotificationType.CHANGE_PASSWORD_CONFIRMATION;
@@ -36,6 +38,7 @@ import static org.tggc.notificationapi.dto.NotificationType.CHANGE_PASSWORD_CONF
 @Service
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
+    private final AuthenticationApi authenticationApi;
     private final UserRepository userRepository;
     private final SenderFactory senderFactory;
     private final CodeApi codeApi;
@@ -44,29 +47,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final EmailCodeValidator emailCodeValidator;
     private final UserValidator userValidator;
     private final AuthMapper authMapper;
-    private final UserMapper userMapper;
 
     @Override
     @Transactional
     public Mono<AuthenticationRs> register(RegisterRq rq) {
         return passwordValidator.validate(new ValidationRq<>(rq.password(), rq.passwordConfirmation()))
-                .then(userRepository.findByEmail(rq.email())
-                        .flatMap(u -> Mono.error(new UserAlreadyCreatedException(u.getEmail())))
-                        .switchIfEmpty(Mono.defer(() -> emailCodeValidator.validate(new ValidationRq<>(
+                .then(authenticationApi.getUserByEmail(rq.email())
+                        .flatMap(u -> Mono.error(new UserAlreadyCreatedException(u.email())))
+                        .switchIfEmpty(emailCodeValidator.validate(new ValidationRq<>(
                                 rq.email(),
                                 rq.verificationCode()
-                        ))))
-                        .then(userRepository.save(userMapper.toEntity(rq, passwordService)))
+                        )))
                 )
-                .map(authMapper::toDto);
+                .then(authenticationApi.saveUser(rq));
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Mono<AuthenticationRs> authenticate(AuthenticationRq rq) {
-        return userRepository.findByEmail(rq.email())
-                .flatMap(user -> userValidator.validate(new ValidationRq<>(user, rq.password())))
-                .switchIfEmpty(Mono.error(new UsernameNotFoundException(rq.email())))
+        return authenticationApi.getUserByEmail(rq.email())
+                .flatMap(u -> userRepository.findByEmail(u.email()))
+                .flatMap(u -> userValidator.validate(new ValidationRq<>(u, rq.password())))
                 .map(authMapper::toDto);
     }
 
@@ -93,6 +94,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         )).subscribeOn(Schedulers.boundedElastic()))
                         .then(sendChangedPasswordNotification(dto.email()))
                 );
+    }
+
+    @Transactional
+    @Override
+    public Mono<Void> blockUser(Long userId, Boolean block, Long blockerId) {
+        return userRepository.findById(blockerId)
+                .flatMap(u -> {
+                    EnumSet<Role> requiredRoles = EnumSet.of(Role.ADMIN);
+                    if (!requiredRoles.contains(u.getRole())) {
+                        return Mono.error(new UserForbiddenException(u.getEmail()));
+                    }
+                    return userRepository.findById(userId)
+                            .switchIfEmpty(Mono.error(new UserNotFoundException("User not found")))
+                            .doOnNext(uc -> uc.setBlocked(block));
+                })
+                .then();
     }
 
     private Mono<Void> sendChangedPasswordNotification(String email) {
