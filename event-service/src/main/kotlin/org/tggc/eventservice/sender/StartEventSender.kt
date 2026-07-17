@@ -9,8 +9,8 @@ import org.tggc.notificationapi.dto.NotificationType
 @Service
 class StartEventSender(kafkaTemplate: KafkaTemplate<String, Any>) : AbstractSender(kafkaTemplate) {
 
-    override fun getNotificationRqBuilder(event: Event?): NotificationRq.NotificationRqBuilder? {
-        val text = "Начинается событие: " + event?.title
+    override fun getNotificationRqBuilder(event: Event): NotificationRq.NotificationRqBuilder {
+        val text = "Начинается событие: " + event.title
         val subject = "Начало события"
         return NotificationRq.builder()
             .text(text)

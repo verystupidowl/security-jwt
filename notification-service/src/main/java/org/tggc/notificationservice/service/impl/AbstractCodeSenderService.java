@@ -7,7 +7,6 @@ import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.types.Expiration;
 import org.tggc.notificationservice.dto.NotificationRq;
-import org.tggc.notificationservice.exception.MailDuplicateException;
 import org.tggc.notificationservice.service.MailSender;
 import org.tggc.notificationservice.service.SenderService;
 
@@ -40,10 +39,9 @@ public abstract class AbstractCodeSenderService implements SenderService {
                     });
                     if (Boolean.FALSE.equals(success)) {
                         log.error("Error while sending change password code");
-                        throw new MailDuplicateException("Код уже был отправлен на этот email");
+                        throw new RuntimeException("Код уже был отправлен на этот email");
                     }
                     mailSender.send(notificationRq);
                 });
-
     }
 }

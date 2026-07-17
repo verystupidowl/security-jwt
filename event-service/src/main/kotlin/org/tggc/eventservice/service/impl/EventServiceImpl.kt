@@ -1,6 +1,5 @@
 package org.tggc.eventservice.service.impl
 
-import lombok.RequiredArgsConstructor
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -8,7 +7,8 @@ import org.tggc.eventservice.dto.EventRq
 import org.tggc.eventservice.dto.EventRs
 import org.tggc.eventservice.exception.AlreadyParticipantException
 import org.tggc.eventservice.exception.EventNotFoundException
-import org.tggc.eventservice.mapper.EventMapper
+import org.tggc.eventservice.mapper.toEventEntity
+import org.tggc.eventservice.mapper.toRs
 import org.tggc.eventservice.model.Event
 import org.tggc.eventservice.model.EventStatus
 import org.tggc.eventservice.model.Participant
@@ -21,10 +21,8 @@ import org.tggc.userapi.dto.UserDto
 import java.time.LocalDateTime
 
 @Service
-@RequiredArgsConstructor
 open class EventServiceImpl(
     private val eventRepository: EventRepository,
-    private val eventMapper: EventMapper,
     private val participantRepository: ParticipantRepository,
     private val userApi: UserApi
 ) : EventService {
@@ -32,15 +30,14 @@ open class EventServiceImpl(
     @Transactional(readOnly = true)
     override fun getEventById(eventId: Long): EventRs {
         return eventRepository.findById(eventId)
-            .map { event -> eventMapper.toEventRs(event) }
+            .map { event: Event -> event.toRs() }
             .orElseThrow { EventNotFoundException(eventId.toString()) }
     }
 
     @Transactional(readOnly = true)
-    override fun getEventsByUser(userId: Long): MutableList<EventRs> {
-        return eventRepository.findByCreatorId(userId).stream()
-            .map { event -> eventMapper.toEventRs(event) }
-            .toList()
+    override fun getEventsByUser(userId: Long): List<EventRs> {
+        return eventRepository.findByCreatorId(userId)
+            .map { event: Event -> event.toRs() }
     }
 
     @Transactional
@@ -48,13 +45,13 @@ open class EventServiceImpl(
         rq: EventRq,
         userId: Long
     ): EventRs {
-        val event = eventMapper.toEvent(rq)
+        return rq.toEventEntity()
             .apply {
                 this.updatedAt = LocalDateTime.now()
                 this.creatorId = userId
                 this.createdAt = LocalDateTime.now()
             }
-        return eventMapper.toEventRs(event)
+            .toRs()
     }
 
     @Transactional
@@ -84,19 +81,20 @@ open class EventServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun getUsersByEvent(eventId: Long): MutableList<UserDto> {
-        val participantIds = participantRepository.findByEventId(eventId)!!.stream()
-            .map { participant -> participant?.userId }
-            .toList()
+    override fun getUsersByEvent(eventId: Long): List<UserDto> {
+        val participantIds = participantRepository.findByEventId(eventId)
+            .map { participant -> participant.userId }
 
         return userApi.getUsers(participantIds)
+            .toStream()
+            .toList()
     }
 
     @Transactional
     override fun leaveEvent(eventId: Long, userId: Long) {
         val participants = participantRepository.findByEventId(eventId)
-        participants?.removeIf { participant -> userId == participant!!.userId }
-        participantRepository.saveAll(participants!!)
+        participants.removeIf { participant -> userId == participant.userId }
+        participantRepository.saveAll(participants)
     }
 
     @Transactional(readOnly = true)
@@ -113,8 +111,7 @@ open class EventServiceImpl(
             EventSpecification.endDateBefore(endDate)
         )
 
-        return eventRepository.findAll(specification).stream()
-            .map { event -> eventMapper.toEventRs(event) }
-            .toList()
+        return eventRepository.findAll(specification)
+            .map { event: Event -> event.toRs() }
     }
 }

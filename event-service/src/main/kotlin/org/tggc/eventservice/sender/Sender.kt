@@ -5,7 +5,7 @@ import org.tggc.notificationapi.dto.NotificationType
 
 interface Sender {
 
-    fun send(email: String?, event: Event?, type: NotificationType?)
+    fun send(email: String, event: Event, type: NotificationType)
 
-    val notificationType: NotificationType?
+    val notificationType: NotificationType
 }

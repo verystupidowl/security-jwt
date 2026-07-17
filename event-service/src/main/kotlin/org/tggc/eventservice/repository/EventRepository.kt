@@ -7,9 +7,9 @@ import org.tggc.eventservice.model.Event
 import java.time.LocalDateTime
 
 @Repository
-interface EventRepository : JpaRepository<Event?, Long?>, JpaSpecificationExecutor<Event> {
+interface EventRepository : JpaRepository<Event, Long>, JpaSpecificationExecutor<Event> {
 
-    fun findByCreatorId(userId: Long?): MutableList<Event>
+    fun findByCreatorId(userId: Long): List<Event>
 
-    fun findByEventDateBetween(now: LocalDateTime?, soon: LocalDateTime?): MutableList<Event>
+    fun findByEventDateBetween(now: LocalDateTime, soon: LocalDateTime): List<Event>
 }

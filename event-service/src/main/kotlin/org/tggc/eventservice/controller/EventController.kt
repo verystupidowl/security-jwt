@@ -25,16 +25,14 @@ import java.time.LocalDateTime
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/events")
 class EventController(private val eventService: EventService) {
-
     @GetMapping("/{eventId}")
-    fun getEvent(@PathVariable eventId: Long): EventRs {
-        return eventService.getEventById(eventId)
-    }
+    fun getEvent(@PathVariable eventId: Long): EventRs = eventService.getEventById(eventId)
+
 
     @GetMapping("/by-user")
-    fun getEventsByUserId(@RequestHeader("X-User-Id") userId: Long): MutableList<EventRs> {
-        return eventService.getEventsByUser(userId)
-    }
+    fun getEventsByUserId(@RequestHeader("X-User-Id") userId: Long): List<EventRs> =
+        eventService.getEventsByUser(userId)
+
 
     @GetMapping("/filter")
     fun getEvents(
@@ -42,34 +40,31 @@ class EventController(private val eventService: EventService) {
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) startDate: LocalDateTime?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) endDate: LocalDateTime?,
         @RequestParam(required = false) creatorId: Long?
-    ): List<EventRs?> {
-        return eventService.getEventsByFilter(title, startDate, endDate, creatorId)
-    }
+    ): List<EventRs?> = eventService.getEventsByFilter(title, startDate, endDate, creatorId)
+
 
     @GetMapping("/participants/{eventId}")
-    fun getParticipantsByEvent(@PathVariable eventId: Long): MutableList<UserDto> {
-        return eventService.getUsersByEvent(eventId)
-    }
+    fun getParticipantsByEvent(@PathVariable eventId: Long): List<UserDto> = eventService.getUsersByEvent(eventId)
+
 
     @PostMapping
     @RequiresRoles(Role.ADMIN, Role.ORGANIZER)
-    fun createEvent(@RequestBody event: EventRq, @RequestHeader("X-User-Id") userId: Long): EventRs {
-        return eventService.createEvent(event, userId)
-    }
+    fun createEvent(@RequestBody event: EventRq, @RequestHeader("X-User-Id") userId: Long): EventRs =
+        eventService.createEvent(event, userId)
+
 
     @PostMapping("/join/{eventId}")
-    fun joinEvent(@PathVariable eventId: Long, @RequestHeader("X-User-Id") userId: Long) {
+    fun joinEvent(@PathVariable eventId: Long, @RequestHeader("X-User-Id") userId: Long) =
         eventService.joinEvent(eventId, userId)
-    }
+
 
     @PostMapping("/leave/{eventId}")
-    fun leaveEvent(@PathVariable eventId: Long, @RequestHeader("X-User-Id") userId: Long) {
+    fun leaveEvent(@PathVariable eventId: Long, @RequestHeader("X-User-Id") userId: Long) =
         eventService.leaveEvent(eventId, userId)
-    }
+
 
     @DeleteMapping("/{eventId}")
     @RequiresRoles(Role.ADMIN)
-    fun deleteEvent(@PathVariable eventId: Long) {
-        eventService.deleteEvent(eventId)
-    }
+    fun deleteEvent(@PathVariable eventId: Long) = eventService.deleteEvent(eventId)
+
 }

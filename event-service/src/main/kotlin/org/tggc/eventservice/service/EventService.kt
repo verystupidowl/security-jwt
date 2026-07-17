@@ -9,7 +9,7 @@ interface EventService {
 
     fun getEventById(eventId: Long): EventRs
 
-    fun getEventsByUser(userId: Long): MutableList<EventRs>
+    fun getEventsByUser(userId: Long): List<EventRs>
 
     fun createEvent(rq: EventRq, userId: Long): EventRs
 
@@ -17,7 +17,7 @@ interface EventService {
 
     fun deleteEvent(eventId: Long)
 
-    fun getUsersByEvent(eventId: Long): MutableList<UserDto>
+    fun getUsersByEvent(eventId: Long): List<UserDto>
 
     fun leaveEvent(eventId: Long, userId: Long)
 

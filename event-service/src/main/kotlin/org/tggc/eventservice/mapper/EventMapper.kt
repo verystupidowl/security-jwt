@@ -1,16 +1,22 @@
 package org.tggc.eventservice.mapper
 
-import org.mapstruct.Mapper
-import org.mapstruct.Mapping
-import org.mapstruct.MappingConstants
 import org.tggc.eventservice.dto.EventRq
 import org.tggc.eventservice.dto.EventRs
 import org.tggc.eventservice.model.Event
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
-interface EventMapper {
-    @Mapping(target = "participants", source = "participants.name")
-    fun toEventRs(event: Event?): EventRs
+fun Event.toRs(): EventRs = EventRs(
+    id = this.id,
+    title = this.title,
+    description = this.description,
+    eventDate = this.eventDate,
+    location = this.location,
+    createdAt = this.createdAt,
+    participants = this.participants
+)
 
-    fun toEvent(eventRq: EventRq?): Event
-}
+fun EventRq.toEventEntity(): Event = Event(
+    title = this.title,
+    description = this.description,
+    eventDate = this.eventDate,
+    location = this.location,
+)

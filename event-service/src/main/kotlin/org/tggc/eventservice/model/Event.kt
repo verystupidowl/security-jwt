@@ -23,5 +23,5 @@ open class Event(
     open var createdAt: LocalDateTime? = null,
     open var updatedAt: LocalDateTime? = null,
     @OneToMany(mappedBy = "event", cascade = [CascadeType.ALL], orphanRemoval = true)
-    open var participants: MutableList<Participant> = mutableListOf()
+    open var participants: MutableList<Participant?>? = mutableListOf()
 )

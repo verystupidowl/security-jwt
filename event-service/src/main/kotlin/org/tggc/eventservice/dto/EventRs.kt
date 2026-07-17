@@ -1,6 +1,7 @@
 package org.tggc.eventservice.dto
 
 import lombok.Builder
+import org.tggc.eventservice.model.Participant
 import java.time.LocalDateTime
 
 @Builder
@@ -11,5 +12,5 @@ data class EventRs(
     val eventDate: LocalDateTime?,
     val location: String?,
     val createdAt: LocalDateTime?,
-    val participants: MutableList<String?>?
+    val participants: MutableList<Participant?>?
 )

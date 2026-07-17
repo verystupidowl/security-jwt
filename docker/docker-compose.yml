@@ -21,7 +21,7 @@ services:
 
 
   zookeeper:
-    image: docker.io/bitnami/zookeeper:3.9
+    image: docker.io/bitnamilegacy/zookeeper:3.9
     restart: always
     ports:
       - "2181:2181"
@@ -29,7 +29,7 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
 
   kafka:
-    image: docker.io/bitnami/kafka:3.4
+    image: docker.io/bitnamilegacy/kafka:3.4
     restart: always
     ports:
       - "9092:9092"

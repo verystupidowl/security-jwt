@@ -1,5 +1,6 @@
 package org.tggc.authenticationservice.service.validator.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.tggc.authenticationservice.exception.IncorrectCodeException;
@@ -17,7 +18,7 @@ public class EmailCodeValidator implements Validator<ValidationRq<String, String
     private final CodeApi codeApi;
 
     @Override
-    public Mono<Void> validate(ValidationRq<String, String> rq) {
+    public Mono<@NonNull Void> validate(ValidationRq<String, String> rq) {
         String email = rq.v1();
         String code = rq.v2();
         return getCode(email)
@@ -29,7 +30,7 @@ public class EmailCodeValidator implements Validator<ValidationRq<String, String
                 });
     }
 
-    private Mono<String> getCode(String email) {
+    private Mono<@NonNull String> getCode(String email) {
         return Mono.fromCallable(() -> codeApi.getCode(email, EMAIL_CONFIRMATION))
                 .subscribeOn(Schedulers.boundedElastic());
     }

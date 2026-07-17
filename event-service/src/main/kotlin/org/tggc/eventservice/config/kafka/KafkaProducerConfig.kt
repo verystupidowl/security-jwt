@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.kafka.core.DefaultKafkaProducerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.core.ProducerFactory
-import org.springframework.kafka.support.serializer.JsonSerializer
+import org.springframework.kafka.support.serializer.JacksonJsonSerializer
 import java.util.Map
 
 @Configuration
@@ -17,21 +17,18 @@ open class KafkaProducerConfig(
     private val bootstrapServers: String
 ) {
 
-    private fun producerProperties(): MutableMap<String?, Any?> {
-        return Map.of<String?, Any?>(
-            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
-            ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java,
-            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer::class.java
-        )
-    }
+    private val producerProperties: MutableMap<String, Any> = Map.of<String, Any>(
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java,
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JacksonJsonSerializer::class.java
+    )
+
 
     @Bean
-    open fun producerFactory(): ProducerFactory<String?, Any?> {
-        return DefaultKafkaProducerFactory<String?, Any?>(producerProperties())
-    }
+    open fun producerFactory(): ProducerFactory<String, Any> = DefaultKafkaProducerFactory(producerProperties)
+
 
     @Bean
-    open fun kafkaTemplate(factory: ProducerFactory<String?, Any?>): KafkaTemplate<String?, Any?> {
-        return KafkaTemplate<String?, Any?>(factory)
-    }
+    open fun kafkaTemplate(factory: ProducerFactory<String, Any>): KafkaTemplate<String, Any> =
+        KafkaTemplate(factory)
 }

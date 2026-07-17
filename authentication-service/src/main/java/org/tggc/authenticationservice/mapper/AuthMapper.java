@@ -11,7 +11,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 public interface AuthMapper extends Mappable<UserCredentials, AuthenticationRs> {
 
     @Override
-    @Mapping(target = "roles", expression = "java(List.of(user.getRole()))")
+    @Mapping(target = "roles", expression = "java(List.of(userCredentials.getRole().name()))")
     @Mapping(target = "userId", source = "id")
     AuthenticationRs toDto(UserCredentials userCredentials);
 }

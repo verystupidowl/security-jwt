@@ -9,8 +9,8 @@ import org.tggc.notificationapi.dto.NotificationType
 @RequiredArgsConstructor
 abstract class AbstractSender(private val kafkaTemplate: KafkaTemplate<String, Any>) : Sender {
 
-    override fun send(email: String?, event: Event?, type: NotificationType?) {
-        val notificationRq = getNotificationRqBuilder(event)!!
+    override fun send(email: String, event: Event, type: NotificationType) {
+        val notificationRq = getNotificationRqBuilder(event)
             .type(type)
             .to(email)
             .build()
@@ -18,5 +18,5 @@ abstract class AbstractSender(private val kafkaTemplate: KafkaTemplate<String, A
         kafkaTemplate.send("simple-notification", notificationRq)
     }
 
-    protected abstract fun getNotificationRqBuilder(event: Event?): NotificationRq.NotificationRqBuilder?
+    protected abstract fun getNotificationRqBuilder(event: Event): NotificationRq.NotificationRqBuilder
 }
