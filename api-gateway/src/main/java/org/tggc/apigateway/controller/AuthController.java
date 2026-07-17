@@ -1,5 +1,6 @@
 package org.tggc.apigateway.controller;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +19,12 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public Mono<TokenRs> register(@RequestBody RegisterRq rq) {
+    public Mono<@NonNull TokenRs> register(@RequestBody RegisterRq rq) {
         return authenticationService.register(rq);
     }
 
     @PostMapping("/authenticate")
-    public Mono<TokenRs> authenticate(@RequestBody AuthenticationRq rq) {
+    public Mono<@NonNull TokenRs> authenticate(@RequestBody AuthenticationRq rq) {
         return authenticationService.authenticate(rq);
     }
 }

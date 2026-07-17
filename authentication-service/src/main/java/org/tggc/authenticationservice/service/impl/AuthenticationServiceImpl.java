@@ -1,5 +1,6 @@
 package org.tggc.authenticationservice.service.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,6 @@ import org.tggc.authenticationservice.service.validator.rq.ValidationRq;
 import org.tggc.notificationapi.api.CodeApi;
 import org.tggc.userapi.api.AuthenticationApi;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 import java.time.LocalDateTime;
 import java.util.EnumSet;
@@ -50,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     @Transactional
-    public Mono<AuthenticationRs> register(RegisterRq rq) {
+    public Mono<@NonNull AuthenticationRs> register(RegisterRq rq) {
         return passwordValidator.validate(new ValidationRq<>(rq.password(), rq.passwordConfirmation()))
                 .then(authenticationApi.getUserByEmail(rq.email())
                         .flatMap(u -> Mono.error(new UserAlreadyCreatedException(u.email())))
@@ -64,7 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     @Transactional(readOnly = true)
-    public Mono<AuthenticationRs> authenticate(AuthenticationRq rq) {
+    public Mono<@NonNull AuthenticationRs> authenticate(AuthenticationRq rq) {
         return authenticationApi.getUserByEmail(rq.email())
                 .flatMap(u -> userRepository.findByEmail(u.email()))
                 .flatMap(u -> userValidator.validate(new ValidationRq<>(u, rq.password())))
@@ -72,14 +72,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Mono<Void> sendCode(SendCodeRq dto) {
+    public Mono<@NonNull Void> sendCode(SendCodeRq dto) {
         Sender sender = senderFactory.getSender(dto.type());
         return sender.send(dto.email(), dto.type());
     }
 
     @Override
     @Transactional
-    public Mono<Void> changePassword(ChangePasswordRq dto) {
+    public Mono<@NonNull Void> changePassword(ChangePasswordRq dto) {
         return passwordValidator.validate(new ValidationRq<>(dto.password(), dto.passwordConfirmation()))
                 .then(userRepository.findByEmail(dto.email())
                         .switchIfEmpty(Mono.error(new UserNotFoundException(dto.email())))
@@ -88,17 +88,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             user.setUpdatedAt(LocalDateTime.now());
                             return userRepository.save(user);
                         })
-                        .then(Mono.fromRunnable(() -> codeApi.deleteCode(
-                                dto.email(),
-                                CHANGE_PASSWORD_CONFIRMATION
-                        )).subscribeOn(Schedulers.boundedElastic()))
-                        .then(sendChangedPasswordNotification(dto.email()))
-                );
+                        .then(codeApi.deleteCode(dto.email(), CHANGE_PASSWORD_CONFIRMATION))
+                        .then(sendChangedPasswordNotification(dto.email())));
     }
 
     @Transactional
     @Override
-    public Mono<Void> blockUser(Long userId, Boolean block, Long blockerId) {
+    public Mono<@NonNull Void> blockUser(Long userId, Boolean block, Long blockerId) {
         return userRepository.findById(blockerId)
                 .flatMap(u -> {
                     EnumSet<Role> requiredRoles = EnumSet.of(Role.ADMIN);
@@ -112,7 +108,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .then();
     }
 
-    private Mono<Void> sendChangedPasswordNotification(String email) {
+    private Mono<@NonNull Void> sendChangedPasswordNotification(String email) {
         return senderFactory.getSender(CHANGED_PASSWORD)
                 .send(email, CHANGED_PASSWORD);
     }

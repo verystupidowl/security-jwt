@@ -8,7 +8,7 @@ import org.tggc.userservice.model.User;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
-public interface UserMapper extends Mappable<User,  UserDto> {
+public interface UserMapper extends Mappable<User,  UserDto, UserDto> {
 
     @Mapping(target = "role", expression = "java(user.getRole())")
     @Override

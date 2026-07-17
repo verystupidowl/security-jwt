@@ -1,5 +1,6 @@
 package org.tggc.authenticationservice.service;
 
+import lombok.NonNull;
 import org.tggc.authapi.dto.AuthenticationRq;
 import org.tggc.authapi.dto.AuthenticationRs;
 import org.tggc.authapi.dto.RegisterRq;
@@ -9,13 +10,13 @@ import reactor.core.publisher.Mono;
 
 public interface AuthenticationService {
 
-    Mono<AuthenticationRs> register(RegisterRq request);
+    Mono<@NonNull AuthenticationRs> register(RegisterRq request);
 
-    Mono<AuthenticationRs> authenticate(AuthenticationRq request);
+    Mono<@NonNull AuthenticationRs> authenticate(AuthenticationRq request);
 
-    Mono<Void> sendCode(SendCodeRq email);
+    Mono<@NonNull Void> sendCode(SendCodeRq email);
 
-    Mono<Void> changePassword(ChangePasswordRq dto);
+    Mono<@NonNull Void> changePassword(ChangePasswordRq dto);
 
-    Mono<Void> blockUser(Long userId, Boolean block, Long id);
+    Mono<@NonNull Void> blockUser(Long userId, Boolean block, Long id);
 }

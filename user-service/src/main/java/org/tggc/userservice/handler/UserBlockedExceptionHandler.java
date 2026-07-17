@@ -1,5 +1,6 @@
 package org.tggc.userservice.handler;
 
+import lombok.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,7 +15,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 public class UserBlockedExceptionHandler {
 
     @ExceptionHandler(UserBlockedException.class)
-    public ResponseEntity<ErrorRs> handleUserBlockedException(UserBlockedException ex) {
+    public ResponseEntity<@NonNull ErrorRs> handleUserBlockedException(UserBlockedException ex) {
         var rs = new ErrorRs(
                 FORBIDDEN,
                 ex.getMessage(),

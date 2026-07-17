@@ -1,5 +1,6 @@
 package org.tggc.authenticationservice.sender.impl;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -21,7 +22,7 @@ public abstract class AbstractSender implements Sender {
     private final KafkaSender<String, Object> kafkaSender;
 
     @Override
-    public Mono<Void> send(String email, NotificationType type) {
+    public Mono<@NonNull Void> send(String email, NotificationType type) {
         var notificationDto = getNotificationDtoBuilder()
                 .to(email)
                 .type(type)

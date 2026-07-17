@@ -1,8 +1,8 @@
 package org.tggc.userservice.mapper;
 
-public interface Mappable<E, D> {
+public interface Mappable<E, Rq, Rs> {
 
-    D toDto(E entity);
+    Rs toDto(E entity);
 
-    E toEntity(D dto);
+    E toEntity(Rq dto);
 }

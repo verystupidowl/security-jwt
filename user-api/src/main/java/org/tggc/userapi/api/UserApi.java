@@ -1,5 +1,6 @@
 package org.tggc.userapi.api;
 
+import lombok.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,8 @@ import java.util.List;
 public interface UserApi {
 
     @GetMapping("/{id}")
-    Mono<UserDto> getUserById(@PathVariable("id") long id);
+    Mono<@NonNull UserDto> getUserById(@PathVariable("id") long id);
 
     @PostMapping("/getByIds")
-    Flux<UserDto> getUsers(@RequestBody List<Long> ids);
+    Flux<@NonNull UserDto> getUsers(@RequestBody List<Long> ids);
 }

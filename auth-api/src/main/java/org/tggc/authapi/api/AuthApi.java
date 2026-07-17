@@ -1,6 +1,7 @@
 package org.tggc.authapi.api;
 
 import jakarta.validation.Valid;
+import lombok.NonNull;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,7 +23,7 @@ public interface AuthApi {
             consumes = APPLICATION_JSON_VALUE,
             produces = APPLICATION_JSON_VALUE
     )
-    Mono<AuthenticationRs> authenticate(@Valid @RequestBody AuthenticationRq request);
+    Mono<@NonNull AuthenticationRs> authenticate(@Valid @RequestBody AuthenticationRq request);
 
     @PostMapping(
             value = "/register",
@@ -30,5 +31,5 @@ public interface AuthApi {
             produces = APPLICATION_JSON_VALUE
     )
     @ResponseStatus(CREATED)
-    Mono<AuthenticationRs> register(@Valid @RequestBody RegisterRq request);
+    Mono<@NonNull AuthenticationRs> register(@Valid @RequestBody RegisterRq request);
 }

@@ -1,5 +1,6 @@
 package org.tggc.apigateway.proxy;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -28,7 +29,7 @@ public class JwtUserHeadersFilter implements GlobalFilter, Ordered {
     }
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<@NonNull Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         return ReactiveSecurityContextHolder.getContext()
                 .map(context -> {
                     Authentication auth = context.getAuthentication();

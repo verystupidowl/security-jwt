@@ -1,5 +1,6 @@
 package org.tggc.apigateway.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +11,7 @@ import org.tggc.apigateway.principal.JwtUserPrincipal;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,8 +19,12 @@ public class JwtAuthenticationManager implements ReactiveAuthenticationManager {
     private final JwtService jwtService;
 
     @Override
-    public Mono<Authentication> authenticate(Authentication authentication) {
-        String token = authentication.getCredentials().toString();
+    @NonNull
+    public Mono<@NonNull Authentication> authenticate(Authentication authentication) {
+        String token = Optional.ofNullable(authentication.getCredentials())
+                .map(Object::toString)
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
+
         if (jwtService.validateToken(token)) {
             String username = jwtService.extractEmail(token);
             List<SimpleGrantedAuthority> authorities = jwtService.extractRoles(token)

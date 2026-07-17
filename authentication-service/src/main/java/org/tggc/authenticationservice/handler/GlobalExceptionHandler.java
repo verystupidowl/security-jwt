@@ -1,5 +1,6 @@
 package org.tggc.authenticationservice.handler;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +22,13 @@ public class GlobalExceptionHandler {
     private final ErrorMapper errorMapper;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorRs> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<@NonNull ErrorRs> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         var rs = errorMapper.toDto(e);
         return ResponseEntity.badRequest().body(rs);
     }
 
     @ExceptionHandler(GlobalException.class)
-    public ResponseEntity<ErrorRs> handleException(GlobalException ex) {
+    public ResponseEntity<@NonNull ErrorRs> handleException(GlobalException ex) {
         var body = new ErrorRs(
                 ex.getHttpStatus(),
                 ex.getMessage(),
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorRs> handleException(Exception e) {
+    public ResponseEntity<@NonNull ErrorRs> handleException(Exception e) {
         var body = new ErrorRs(
                 INTERNAL_SERVER_ERROR,
                 "Error",

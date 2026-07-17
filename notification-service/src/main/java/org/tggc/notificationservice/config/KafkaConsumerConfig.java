@@ -1,5 +1,7 @@
 package org.tggc.notificationservice.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,13 +32,13 @@ public class KafkaConsumerConfig {
     private String groupId;
 
     @Bean
-    public ConsumerFactory<String, Object> consumerFactory() {
+    public ConsumerFactory<@NonNull String, @NonNull Object> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerProperties());
     }
 
     @Bean
-    public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, Object>> listenerContainerFactory() {
-        var factory = new ConcurrentKafkaListenerContainerFactory<String, Object>();
+    public KafkaListenerContainerFactory<@NonNull ConcurrentMessageListenerContainer<@NonNull String, @NonNull Object>> listenerContainerFactory() {
+        var factory = new ConcurrentKafkaListenerContainerFactory<@NonNull String, @NonNull Object>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
@@ -50,6 +52,11 @@ public class KafkaConsumerConfig {
                         ex.getCause().getCause().getClass().getName(), ex.getCause().getCause().getMessage()
                 );
         return new DefaultErrorHandler(recover, new FixedBackOff(0L, 0L));
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     private Map<String, Object> consumerProperties() {

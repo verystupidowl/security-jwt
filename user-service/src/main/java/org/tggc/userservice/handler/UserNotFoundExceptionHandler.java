@@ -1,5 +1,6 @@
 package org.tggc.userservice.handler;
 
+import lombok.NonNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,7 +16,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 public class UserNotFoundExceptionHandler {
 
     @ExceptionHandler(UserBlockedException.class)
-    public ResponseEntity<ErrorRs> handleUserNotFoundException(UserNotFoundException ex) {
+    public ResponseEntity<@NonNull ErrorRs> handleUserNotFoundException(UserNotFoundException ex) {
         var rs = new ErrorRs(
                 NOT_FOUND,
                 ex.getMessage(),

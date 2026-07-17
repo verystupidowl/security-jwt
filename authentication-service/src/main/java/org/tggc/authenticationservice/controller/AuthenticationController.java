@@ -1,6 +1,7 @@
 package org.tggc.authenticationservice.controller;
 
 import jakarta.validation.Valid;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,27 +26,27 @@ public class AuthenticationController implements AuthApi {
     private final AuthenticationService authenticationService;
 
     @Override
-    public Mono<AuthenticationRs> register(@Valid @RequestBody RegisterRq request) {
+    public Mono<@NonNull AuthenticationRs> register(@Valid @RequestBody RegisterRq request) {
         return authenticationService.register(request);
     }
 
     @Override
-    public Mono<AuthenticationRs> authenticate(@Valid @RequestBody AuthenticationRq request) {
+    public Mono<@NonNull AuthenticationRs> authenticate(@Valid @RequestBody AuthenticationRq request) {
         return authenticationService.authenticate(request);
     }
 
     @PostMapping("/send-code")
-    public Mono<Void> sendCode(@Valid @RequestBody SendCodeRq dto) {
+    public Mono<@NonNull Void> sendCode(@Valid @RequestBody SendCodeRq dto) {
         return authenticationService.sendCode(dto);
     }
 
     @PostMapping("/change-password")
-    public Mono<Void> changePassword(@Valid @RequestBody ChangePasswordRq dto) {
+    public Mono<@NonNull Void> changePassword(@Valid @RequestBody ChangePasswordRq dto) {
         return authenticationService.changePassword(dto);
     }
 
     @PostMapping("/block/{userId}")
-    public Mono<Void> blockUser(@PathVariable("userId") Long userId,
+    public Mono<@NonNull Void> blockUser(@PathVariable("userId") Long userId,
                                 @RequestParam("block") Boolean block,
                                 @RequestHeader("X-UserId") Long id) {
         return authenticationService.blockUser(userId, block, id);

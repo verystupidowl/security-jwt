@@ -1,6 +1,7 @@
 package org.tggc.apigateway.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class FeignExceptionHandler {
 
     @ExceptionHandler(FeignErrorException.class)
     @SneakyThrows
-    public ResponseEntity<ErrorRs> handleFeignClientException(FeignErrorException e) {
+    public ResponseEntity<@NonNull ErrorRs> handleFeignClientException(FeignErrorException e) {
         var rs = objectMapper.readValue(e.getBody(), ErrorRs.class);
         return ResponseEntity
                 .status(e.getHttpStatus())

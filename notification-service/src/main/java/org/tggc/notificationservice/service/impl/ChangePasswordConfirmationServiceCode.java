@@ -1,34 +1,36 @@
 package org.tggc.notificationservice.service.impl;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.tggc.notificationapi.dto.NotificationType;
 import org.tggc.notificationservice.service.CodeService;
 import org.tggc.notificationservice.service.MailSender;
+import reactor.core.publisher.Mono;
 
 import static org.tggc.notificationapi.dto.NotificationType.CHANGE_PASSWORD_CONFIRMATION;
 
 @Slf4j
 @Service
 public class ChangePasswordConfirmationServiceCode extends AbstractCodeSenderService implements CodeService {
-    private final RedisTemplate<String, String> redisTemplate;
+    private final ReactiveRedisTemplate<@NonNull String, @NonNull String> redisTemplate;
 
-    public ChangePasswordConfirmationServiceCode(RedisTemplate<String, String> redisTemplate, MailSender mailSender) {
+    public ChangePasswordConfirmationServiceCode(ReactiveRedisTemplate<@NonNull String, @NonNull String> redisTemplate, MailSender mailSender) {
         super(redisTemplate, mailSender);
         this.redisTemplate = redisTemplate;
     }
 
     @Override
-    public String getCode(String email) {
+    public Mono<@NonNull String> getCode(String email) {
         return redisTemplate.opsForValue().get(getNotificationType().getKey(email));
     }
 
 
     @Override
-    public void deleteCode(String email) {
+    public Mono<@NonNull Void> deleteCode(String email) {
         log.info("cache reset-code for email: {}", email);
-        redisTemplate.delete(getNotificationType().getKey(email));
+        return redisTemplate.delete(getNotificationType().getKey(email)).then();
     }
 
     @Override

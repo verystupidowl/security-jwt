@@ -1,5 +1,6 @@
 package org.tggc.userservice.controller;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,17 +21,17 @@ public class UserController implements UserApi {
     private final UserService userService;
 
     @GetMapping("/me")
-    public Mono<UserDto> getMe(@RequestHeader("X-User-Id") Long userId) {
+    public Mono<@NonNull UserDto> getMe(@RequestHeader("X-User-Id") Long userId) {
         return userService.getUserById(userId);
     }
 
     @Override
-    public Mono<UserDto> getUserById(long id) {
+    public Mono<@NonNull UserDto> getUserById(long id) {
         return userService.getUserById(id);
     }
 
     @Override
-    public Flux<UserDto> getUsers(List<Long> ids) {
+    public Flux<@NonNull UserDto> getUsers(List<Long> ids) {
         return userService.getUsersByIds(ids);
     }
 }

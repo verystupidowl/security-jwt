@@ -1,5 +1,6 @@
 package org.tggc.apigateway.service;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ public class AuthenticationService {
     private final AuthApi authApi;
     private final JwtService jwtService;
 
-    public Mono<TokenRs> register(RegisterRq rq) {
+    public Mono<@NonNull TokenRs> register(RegisterRq rq) {
         return authApi.register(rq)
                 .map(authenticationRs -> {
                     String token = jwtService.generateToken(
@@ -30,7 +31,7 @@ public class AuthenticationService {
 
     }
 
-    public Mono<TokenRs> authenticate(AuthenticationRq rq) {
+    public Mono<@NonNull TokenRs> authenticate(AuthenticationRq rq) {
         return authApi.authenticate(rq)
                 .map(authenticationRs -> {
                     String token = jwtService.generateToken(

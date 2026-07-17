@@ -1,5 +1,6 @@
 package org.tggc.userservice.controller;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 import org.tggc.authapi.dto.AuthenticationRs;
@@ -15,12 +16,12 @@ public class AuthenticationController implements AuthenticationApi {
     private final UserService userService;
 
     @Override
-    public Mono<UserDto> getUserByEmail(String email) {
+    public Mono<@NonNull UserDto> getUserByEmail(String email) {
         return userService.getUserByEmail(email);
     }
 
     @Override
-    public Mono<AuthenticationRs> saveUser(RegisterRq registerRq) {
-        return null;
+    public Mono<@NonNull AuthenticationRs> saveUser(RegisterRq registerRq) {
+        return userService.saveUser(registerRq);
     }
 }

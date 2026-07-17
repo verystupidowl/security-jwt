@@ -27,6 +27,6 @@ public class NotificationListener {
         NotificationRq notificationRq = objectMapper.readValue(message, NotificationRq.class);
         log.info("Received change password message: {}", notificationRq);
         SenderService service = factory.getSenderService(notificationRq.type());
-        service.sendNotification(notificationRq);
+        service.sendNotification(notificationRq).subscribe();
     }
 }
